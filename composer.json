@@ -1,5 +1,5 @@
 {
-    "name": "jimwins/titie",
+    "name": "jimwins/titi",
     "type": "library",
     "description": "A lightweight nearly-zero-configuration object-relational mapper and fluent query builder for PHP, plus a lightweight ActiveRecord implementation",
     "keywords": ["titi", "paris", "idiorm", "orm", "query builder", "activerecord"],
