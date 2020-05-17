@@ -102,6 +102,9 @@ if "%1" == "qthelp" (
 	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\Idiorm.qhcp
 	echo.To view the help file:
 	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\Idiorm.ghc
+	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\Paris.qhcp
+	echo.To view the help file:
+	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\Paris.ghc
 	goto end
 )
 

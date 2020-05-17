@@ -80,6 +80,9 @@ qthelp:
 	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Idiorm.qhcp"
 	@echo "To view the help file:"
 	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Idiorm.qhc"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Paris.qhcp"
+	@echo "To view the help file:"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Paris.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
@@ -88,6 +91,8 @@ devhelp:
 	@echo "To view the help file:"
 	@echo "# mkdir -p $$HOME/.local/share/devhelp/Idiorm"
 	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Idiorm"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/Paris"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Paris"
 	@echo "# devhelp"
 
 epub:

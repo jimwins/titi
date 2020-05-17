@@ -1,6 +1,7 @@
 *.swp
 *.sqlite
 docs/_build
+nbproject/
 /phpunit.phar
 /vendor
 /composer.lock

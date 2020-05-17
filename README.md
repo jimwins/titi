@@ -63,6 +63,26 @@ $tweets = ORM::for_table('tweet')
 foreach ($tweets as $tweet) {
     echo $tweet->text;
 }
+
+/* ActiveRecord model */
+class User extends Model {
+    public function tweets() {
+        return $this->has_many('Tweet');
+    }
+}
+
+class Tweet extends Model {}
+
+$user = Model::factory('User')
+    ->where_equal('username', 'j4mie')
+    ->find_one();
+$user->first_name = 'Jamie';
+$user->save();
+
+$tweets = $user->tweets()->find_many();
+foreach ($tweets as $tweet) {
+    echo $tweet->text;
+}
 ```
 
 Tests
