@@ -45,6 +45,11 @@ Let's See Some Code
 -------------------
 
 ```php
+require 'vendor/autoload.php';
+
+use \Titi\ORM;
+use \Titi\Model;
+
 $user = ORM::for_table('user')
     ->where_equal('username', 'j4mie')
     ->find_one();
