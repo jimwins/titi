@@ -921,11 +921,11 @@ If you are using PHP 5.3+ you can also do the following:
 This does the same as the example above but is shorter and more readable.
 
 
-The only differences between using Idiorm and using Paris for querying
-are as follows:
+The only differences between using the ORM class and the Model classes for
+querying are as follows:
 
 1. You do not need to call the ``for_table`` method to specify the
-   database table to use. Paris will supply this automatically based on
+   database table to use. The Model class will do this automatically based on
    the class name (or the ``$_table`` static property, if present).
 
 2. The ``find_one`` and ``find_many`` methods will return instances of

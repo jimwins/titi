@@ -3,8 +3,8 @@ Filters
 
 It is often desirable to create reusable queries that can be used to
 extract particular subsets of data without repeating large sections of
-code. Paris allows this by providing a method called ``filter`` which
-can be chained in queries alongside the existing Idiorm query API. The
+code. Titi Models allow this by providing a method called ``filter`` which
+can be chained in queries alongside the existing ORM query API. The
 filter method takes the name of a **public static** method on the
 current Model subclass as an argument. The supplied method will be
 called at the point in the chain where ``filter`` is called, and will be

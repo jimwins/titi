@@ -1,14 +1,14 @@
 Associations
 ============
 
-Paris provides a simple API for one-to-one, one-to-many and many-to-many
+Titi Models provide a simple API for one-to-one, one-to-many and many-to-many
 relationships (associations) between models. It takes a different
 approach to many other ORMs, which use associative arrays to add
 configuration metadata about relationships to model classes. These
 arrays can often be deeply nested and complex, and are therefore quite
 error-prone.
 
-Instead, Paris treats the act of querying across a relationship as a
+Instead, these models treat the act of querying across a relationship as a
 *behaviour*, and supplies a family of helper methods to help generate
 such queries. These helper methods should be called from within
 *methods* on your model classes which are named to describe the
@@ -19,7 +19,7 @@ modified and added to before it is run.
 Summary
 ^^^^^^^
 
-The following list summarises the associations provided by Paris, and
+The following list summarises the associations provided by models, and
 explains which helper method supports each type of association:
 
 One-to-one
@@ -50,7 +50,7 @@ For example, say we have a ``User`` model. Each user has a single
 we should add a method called ``profile`` to the ``User`` class (note
 that the method name here is arbitrary, but should describe the
 relationship). This method calls the protected ``has_one`` method
-provided by Paris, passing in the class name of the related object. The
+provided by the model, passing in the class name of the related object. The
 ``profile`` method should return an ORM instance ready for (optional)
 further filtering.
 
@@ -77,16 +77,16 @@ The API for this method works as follows:
     // Find the profile associated with the user
     $profile = $user->profile()->find_one();
 
-By default, Paris assumes that the foreign key column on the related
+By default, models assume that the foreign key column on the related
 table has the same name as the current (base) table, with ``_id``
-appended. In the example above, Paris will look for a foreign key column
+appended. In the example above, the model will look for a foreign key column
 called ``user_id`` on the table used by the ``Profile`` class. To
 override this behaviour, add a second argument to your ``has_one`` call,
 passing the name of the column to use.
 
-In addition, Paris assumes that the foreign key column in the current (base)
+In addition, models assume that the foreign key column in the current (base)
  table is the primary key column of the base table. In the example above, 
-Paris will use the column called ``user_id`` (assuming ``user_id`` is the 
+the model will use the column called ``user_id`` (assuming ``user_id`` is the 
 primary key for the user table) in the base table (in this case the user table) 
 as the foreign key column in the base table. To override this behaviour, 
 add a third argument to your ``has_one call``, passing the name of the column 
@@ -102,7 +102,7 @@ For example, say we have a ``User`` model. Each user has several
 should add a method called ``posts`` to the ``User`` class (note that
 the method name here is arbitrary, but should describe the
 relationship). This method calls the protected ``has_many`` method
-provided by Paris, passing in the class name of the related objects.
+provided by the model, passing in the class name of the related objects.
 **Pass the model class name literally, not a pluralised version**. The
 ``posts`` method should return an ORM instance ready for (optional)
 further filtering.
@@ -130,15 +130,15 @@ The API for this method works as follows:
     // Find the posts associated with the user
     $posts = $user->posts()->find_many();
 
-By default, Paris assumes that the foreign key column on the related
+By default, models assume that the foreign key column on the related
 table has the same name as the current (base) table, with ``_id``
-appended. In the example above, Paris will look for a foreign key column
+appended. In the example above, the model will look for a foreign key column
 called ``user_id`` on the table used by the ``Post`` class. To override
 this behaviour, add a second argument to your ``has_many`` call, passing
 the name of the column to use.
 
-In addition, Paris assumes that the foreign key column in the current (base) 
-table is the primary key column of the base table. In the example above, Paris 
+In addition, models assume that the foreign key column in the current (base) 
+table is the primary key column of the base table. In the example above, the model
 will use the column called ``user_id`` (assuming ``user_id`` is the primary key 
 for the user table) in the base table (in this case the user table) as the 
 foreign key column in the base table. To override this behaviour, add a third 
@@ -175,16 +175,16 @@ The API for this method works as follows:
     // Find the user associated with the profile
     $user = $profile->user()->find_one();
 
-Again, Paris makes an assumption that the foreign key on the current
+Again, models make an assumption that the foreign key on the current
 (base) table has the same name as the related table with ``_id``
-appended. In the example above, Paris will look for a column named
+appended. In the example above, the model will look for a column named
 ``user_id``. To override this behaviour, pass a second argument to the
 ``belongs_to`` method, specifying the name of the column on the current
 (base) table to use.
 
-Paris also makes an assumption that the foreign key in the associated (related) 
+Models also make an assumption that the foreign key in the associated (related) 
 table is the primary key column of the related table. In the example above, 
-Paris will look for a column named ``user_id`` in the user table (the related 
+the model will look for a column named ``user_id`` in the user table (the related 
 table in this example). To override this behaviour, pass a third argument to 
 the belongs_to method, specifying the name of the column in the related table 
 to use as the foreign key column in the related table.
@@ -209,7 +209,7 @@ classes, in alphabetical order. In this case, our classes are called
 We should then add a method called ``authors`` to the ``Book`` class
 (note that the method name here is arbitrary, but should describe the
 relationship). This method calls the protected ``has_many_through``
-method provided by Paris, passing in the class name of the related
+method provided by the model, passing in the class name of the related
 objects. **Pass the model class name literally, not a pluralised
 version**. The ``authors`` method should return an ORM instance ready
 for (optional) further filtering.

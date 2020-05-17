@@ -259,7 +259,7 @@ Setting: ``Model::$auto_prefix_models``
 To save having type out model class name prefixes whenever code utilises ``Model::for_table()``
 it is possible to specify a prefix that will be prepended onto the class name.
 
-The model prefix is treated the same way as any other class name when Paris
+The model prefix is treated the same way as any other class name when the Model
 attempts to convert it to a table name. This is documented in the :doc:`Models`
 section of the documentation.
 
@@ -310,7 +310,7 @@ table name ``car_tyre``.
 Further Configuration
 ~~~~~~~~~~~~~~~~~~~~~
 
-The only other configuration options provided by Paris itself are the
+The only other configuration options provided by Titi Models are the
 ``$_table`` and ``$_id_column`` static properties on model classes. To
 configure the database connection, you should use Idiorm’s configuration
 system via the ``ORM::configure`` method.

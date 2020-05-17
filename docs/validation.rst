@@ -9,16 +9,16 @@ that if you extend your application in the future to update your model
 via an alternative route (say a REST API rather than a form) you can
 re-use the same validation code.
 
-Despite this, Paris doesn’t provide any built-in support for validation.
+Despite this, Titi doesn’t provide any built-in support for validation.
 This is because validation is potentially quite complex, and often very
-application-specific. Paris is deliberately quite ignorant about your
+application-specific. Titi is deliberately quite ignorant about your
 actual data - it simply executes queries, and gives you the
 responsibility of making sure the data inside your models is valid and
-correct. Adding a full validation framework to Paris would probably
-require more code than Paris itself!
+correct. Adding a full validation framework to Titi would probably
+require more code than Titi itself!
 
 However, there are several simple ways that you could add validation to
-your models without any help from Paris. You could override the
+your models without any help from Titi. You could override the
 ``save()`` method, check the data is valid, and return ``false`` on
 failure, or call ``parent::save()`` on success. You could create your
 own subclass of the ``Model`` base class and add your own generic

@@ -20,7 +20,6 @@ Contents:
    filters
    transactions
    validation
-   migrations
    connections
 
 Indices and tables
