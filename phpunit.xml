@@ -2,7 +2,8 @@
          backupStaticAttributes="false"
          bootstrap="test/bootstrap.php"
          cacheTokens="false"
-         colors="true">
+         colors="true"
+         convertDeprecationsToExceptions="true">
     <testsuites>
         <testsuite name="Titi Test Suite">
             <directory suffix="Test.php">test</directory>
