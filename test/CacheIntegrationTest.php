@@ -1,35 +1,35 @@
 <?php
 
-class CacheIntegrationTest extends PHPUnit_Framework_TestCase {
+class CacheIntegrationTest extends \PHPUnit\Framework\TestCase {
 
-    public function setUp() {
-        ORM::configure('sqlite::memory:');
-        ORM::configure('logging', true);
-        ORM::configure('caching', true);
+    public function setUp(): void {
+        \Titi\ORM::configure('sqlite::memory:');
+        \Titi\ORM::configure('logging', true);
+        \Titi\ORM::configure('caching', true);
 
-        ORM::raw_execute('CREATE TABLE `league` ( `class_id` INTEGER )');
+        \Titi\ORM::raw_execute('CREATE TABLE `league` ( `class_id` INTEGER )');
         // needs to be individually inserted to support SQLite before
         // version 3.7.11
-        ORM::raw_execute('INSERT INTO `league`(`class_id`) VALUES (1)');
-        ORM::raw_execute('INSERT INTO `league`(`class_id`) VALUES (2)');
-        ORM::raw_execute('INSERT INTO `league`(`class_id`) VALUES (3)');
+        \Titi\ORM::raw_execute('INSERT INTO `league`(`class_id`) VALUES (1)');
+        \Titi\ORM::raw_execute('INSERT INTO `league`(`class_id`) VALUES (2)');
+        \Titi\ORM::raw_execute('INSERT INTO `league`(`class_id`) VALUES (3)');
 
-        $x = ORM::for_table('league')->count();
+        $x = \Titi\ORM::for_table('league')->count();
         $this->assertEquals(3, $x);
     }
 
-    public function tearDown() {
-        ORM::raw_execute('DROP TABLE `league`');
+    public function tearDown(): void {
+        \Titi\ORM::raw_execute('DROP TABLE `league`');
     }
 
     public function testRegressionForPullRequest319() {
-        $rs = ORM::for_table('league')->where('class_id', 1);
+        $rs = \Titi\ORM::for_table('league')->where('class_id', 1);
         $total = $rs->count();
         $this->assertEquals(1, $total);
         $row = $rs->find_one();
         $this->assertEquals(array('class_id' => 1), $row->as_array());
 
-        $rs = ORM::for_table('league')->where('class_id', 1);
+        $rs = \Titi\ORM::for_table('league')->where('class_id', 1);
         $total = $rs->count();
         $this->assertEquals(1, $total);
         try {

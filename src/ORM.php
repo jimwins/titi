@@ -31,8 +31,8 @@ namespace Titi;
  * @method array getConnectionNames()
  * @method $this useIdColumn($id_column)
  * @method \ORM|bool findOne($id=null)
- * @method array|\IdiormResultSet findMany()
- * @method \IdiormResultSet findResultSet()
+ * @method array|\TitiResultSet findMany()
+ * @method \TitiResultSet findResultSet()
  * @method array findArray()
  * @method $this forceAllDirty()
  * @method $this rawQuery($query, $parameters = array())
@@ -88,7 +88,7 @@ namespace Titi;
  * @method bool isNew()
  */
 
-class ORM implements ArrayAccess {
+class ORM implements \ArrayAccess {
 
     // ----------------------- //
     // --- CLASS CONSTANTS --- //
@@ -113,7 +113,7 @@ class ORM implements ArrayAccess {
         'connection_string' => 'sqlite::memory:',
         'id_column' => 'id',
         'id_column_overrides' => array(),
-        'error_mode' => PDO::ERRMODE_EXCEPTION,
+        'error_mode' => \PDO::ERRMODE_EXCEPTION,
         'username' => null,
         'password' => null,
         'driver_options' => null,
@@ -226,7 +226,7 @@ class ORM implements ArrayAccess {
      * is omitted and the key is a string, the setting is
      * assumed to be the DSN string used by PDO to connect
      * to the database (often, this will be the only configuration
-     * required to use Idiorm). If you have more than one setting
+     * required to use Titi). If you have more than one setting
      * you wish to configure, another shortcut is to pass an array
      * of settings (and omit the second argument).
      * @param string|array $key
@@ -297,14 +297,14 @@ class ORM implements ArrayAccess {
             !is_object(self::$_db[$connection_name])) {
             self::_setup_db_config($connection_name);
 
-            $db = new PDO(
+            $db = new \PDO(
                 self::$_config[$connection_name]['connection_string'],
                 self::$_config[$connection_name]['username'],
                 self::$_config[$connection_name]['password'],
                 self::$_config[$connection_name]['driver_options']
             );
 
-            $db->setAttribute(PDO::ATTR_ERRMODE, self::$_config[$connection_name]['error_mode']);
+            $db->setAttribute(\PDO::ATTR_ERRMODE, self::$_config[$connection_name]['error_mode']);
             self::set_db($db, $connection_name);
         }
     }
@@ -320,7 +320,7 @@ class ORM implements ArrayAccess {
     }
 
     /**
-     * Set the PDO object used by Idiorm to communicate with the database.
+     * Set the PDO object used by Titi to communicate with the database.
      * This is public in case the ORM should use a ready-instantiated
      * PDO object as its database connection. Accepts an optional string key
      * to identify the connection if multiple connections are used.
@@ -379,7 +379,7 @@ class ORM implements ArrayAccess {
      * @return string
      */
     protected static function _detect_identifier_quote_character($connection_name) {
-        switch(self::get_db($connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+        switch(self::get_db($connection_name)->getAttribute(\PDO::ATTR_DRIVER_NAME)) {
             case 'pgsql':
             case 'sqlsrv':
             case 'dblib':
@@ -402,7 +402,7 @@ class ORM implements ArrayAccess {
      * @return string Limit clause style keyword/constant
      */
     protected static function _detect_limit_clause_style($connection_name) {
-        switch(self::get_db($connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+        switch(self::get_db($connection_name)->getAttribute(\PDO::ATTR_DRIVER_NAME)) {
             case 'sqlsrv':
             case 'dblib':
             case 'mssql':
@@ -421,13 +421,13 @@ class ORM implements ArrayAccess {
      * @return PDO
      */
     public static function get_db($connection_name = self::DEFAULT_CONNECTION) {
-        self::_setup_db($connection_name); // required in case this is called before Idiorm is instantiated
+        self::_setup_db($connection_name); // required in case this is called before Titi is instantiated
         return self::$_db[$connection_name];
     }
 
     /**
      * Executes a raw query as a wrapper for PDOStatement::execute.
-     * Useful for queries that can't be accomplished through Idiorm,
+     * Useful for queries that can't be accomplished through Titi,
      * particularly those using engine-specific features.
      * @example raw_execute('SELECT `name`, AVG(`order`) FROM `customer` GROUP BY `name` HAVING AVG(`order`) > 10')
      * @example raw_execute('INSERT OR REPLACE INTO `widget` (`id`, `name`) SELECT `id`, `name` FROM `other_table`')
@@ -466,13 +466,13 @@ class ORM implements ArrayAccess {
 
         foreach ($parameters as $key => &$param) {
             if (is_null($param)) {
-                $type = PDO::PARAM_NULL;
+                $type = \PDO::PARAM_NULL;
             } else if (is_bool($param)) {
-                $type = PDO::PARAM_BOOL;
+                $type = \PDO::PARAM_BOOL;
             } else if (is_int($param)) {
-                $type = PDO::PARAM_INT;
+                $type = \PDO::PARAM_INT;
             } else {
-                $type = PDO::PARAM_STR;
+                $type = \PDO::PARAM_STR;
             }
 
             $statement->bindParam(is_int($key) ? ++$key : $key, $param, $type);
@@ -521,7 +521,7 @@ class ORM implements ArrayAccess {
 
                 // Replace placeholders in the query for vsprintf
                 if(false !== strpos($query, "'") || false !== strpos($query, '"')) {
-                    $query = IdiormString::str_replace_outside_quotes("?", "%s", $query);
+                    $query = TitiString::str_replace_outside_quotes("?", "%s", $query);
                 } else {
                     $query = str_replace("?", "%s", $query);
                 }
@@ -626,7 +626,7 @@ class ORM implements ArrayAccess {
      * Specify the ID column to use for this instance or array of instances only.
      * This overrides the id_column and id_column_overrides settings.
      *
-     * This is mostly useful for libraries built on top of Idiorm, and will
+     * This is mostly useful for libraries built on top of Titi, and will
      * not normally be used in manually built queries. If you don't know why
      * you would want to use this, you should probably just ignore it.
      */
@@ -674,7 +674,7 @@ class ORM implements ArrayAccess {
      * from your query, and execute it. Will return an array
      * of instances of the ORM class, or an empty array if
      * no rows were returned.
-     * @return array|\IdiormResultSet
+     * @return array|\TitiResultSet
      */
     public function find_many() {
         if(self::$_config[$this->_connection_name]['return_result_sets']) {
@@ -699,10 +699,10 @@ class ORM implements ArrayAccess {
      * Tell the ORM that you are expecting multiple results
      * from your query, and execute it. Will return a result set object
      * containing instances of the ORM class.
-     * @return \IdiormResultSet
+     * @return \TitiResultSet
      */
     public function find_result_set() {
-        return new IdiormResultSet($this->_find_many());
+        return new TitiResultSet($this->_find_many());
     }
 
     /**
@@ -1731,7 +1731,7 @@ class ORM implements ArrayAccess {
         $fragment = '';
         if (!is_null($this->_limit) &&
             self::$_config[$this->_connection_name]['limit_clause_style'] == ORM::LIMIT_STYLE_LIMIT) {
-            if (self::get_db($this->_connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME) == 'firebird') {
+            if (self::get_db($this->_connection_name)->getAttribute(\PDO::ATTR_DRIVER_NAME) == 'firebird') {
                 $fragment = 'ROWS';
             } else {
                 $fragment = 'LIMIT';
@@ -1747,7 +1747,7 @@ class ORM implements ArrayAccess {
     protected function _build_offset() {
         if (!is_null($this->_offset)) {
             $clause = 'OFFSET';
-            if (self::get_db($this->_connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME) == 'firebird') {
+            if (self::get_db($this->_connection_name)->getAttribute(\PDO::ATTR_DRIVER_NAME) == 'firebird') {
                 $clause = 'TO';
             }
             return "$clause " . $this->_offset;
@@ -1877,7 +1877,7 @@ class ORM implements ArrayAccess {
             $cached_result = self::_check_query_cache($cache_key, $this->_table_name, $this->_connection_name);
 
             if ($cached_result !== false) {
-                $this->_reset_idiorm_state();
+                $this->_reset_titi_state();
                 return $cached_result;
             }
         }
@@ -1886,7 +1886,7 @@ class ORM implements ArrayAccess {
         $statement = self::get_last_statement();
 
         $rows = array();
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
             $rows[] = $row;
         }
 
@@ -1894,14 +1894,14 @@ class ORM implements ArrayAccess {
             self::_cache_query_result($cache_key, $rows, $this->_table_name, $this->_connection_name);
         }
 
-        $this->_reset_idiorm_state();
+        $this->_reset_titi_state();
         return $rows;
     }
 
     /**
-     * Reset the Idiorm instance state
+     * Reset the Titi instance state
      */
-    private function _reset_idiorm_state() {
+    private function _reset_titi_state() {
         $this->_values = array();
         $this->_result_columns = array('*');
         $this->_using_default_result_columns = true;
@@ -1964,11 +1964,11 @@ class ORM implements ArrayAccess {
             if (is_array($id)) {
                 foreach ($id as $id_part) {
                     if ($id_part === null) {
-                        throw new Exception('Primary key ID contains null value(s)');
+                        throw new \Exception('Primary key ID contains null value(s)');
                     }
                 }
             } else if ($id === null) {
-                throw new Exception('Primary key ID missing from row or is null');
+                throw new \Exception('Primary key ID missing from row or is null');
             }
         }
 
@@ -2073,10 +2073,10 @@ class ORM implements ArrayAccess {
             $this->_is_new = false;
             if ($this->count_null_id_columns() != 0) {
                 $db = self::get_db($this->_connection_name);
-                if($db->getAttribute(PDO::ATTR_DRIVER_NAME) == 'pgsql') {
+                if($db->getAttribute(\PDO::ATTR_DRIVER_NAME) == 'pgsql') {
                     // it may return several columns if a compound primary
                     // key is used
-                    $row = self::get_last_statement()->fetch(PDO::FETCH_ASSOC);
+                    $row = self::get_last_statement()->fetch(\PDO::FETCH_ASSOC);
                     foreach($row as $key => $value) {
                         $this->_data[$key] = $value;
                     }
@@ -2147,7 +2147,7 @@ class ORM implements ArrayAccess {
         $placeholders = $this->_create_placeholders($this->_dirty_fields);
         $query[] = "({$placeholders})";
 
-        if (self::get_db($this->_connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME) == 'pgsql') {
+        if (self::get_db($this->_connection_name)->getAttribute(\PDO::ATTR_DRIVER_NAME) == 'pgsql') {
             $query[] = 'RETURNING ' . $this->_quote_identifier($this->_get_id_column_name());
         }
 
@@ -2195,7 +2195,7 @@ class ORM implements ArrayAccess {
 
     public function offsetSet($key, $value) {
         if(is_null($key)) {
-            throw new InvalidArgumentException('You must specify a key/array index.');
+            throw new \InvalidArgumentException('You must specify a key/array index.');
         }
         $this->set($key, $value);
     }
@@ -2244,7 +2244,7 @@ class ORM implements ArrayAccess {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $arguments);
         } else {
-            throw new IdiormMethodMissingException("Method $name() does not exist in class " . get_class($this));
+            throw new TitiMethodMissingException("Method $name() does not exist in class " . get_class($this));
         }
     }
 
@@ -2270,13 +2270,13 @@ class ORM implements ArrayAccess {
 
 /**
  * A class to handle str_replace operations that involve quoted strings
- * @example IdiormString::str_replace_outside_quotes('?', '%s', 'columnA = "Hello?" AND columnB = ?');
- * @example IdiormString::value('columnA = "Hello?" AND columnB = ?')->replace_outside_quotes('?', '%s');
+ * @example TitiString::str_replace_outside_quotes('?', '%s', 'columnA = "Hello?" AND columnB = ?');
+ * @example TitiString::value('columnA = "Hello?" AND columnB = ?')->replace_outside_quotes('?', '%s');
  * @author Jeff Roberson <ridgerunner@fluxbb.org>
  * @author Simon Holywell <treffynnon@php.net>
  * @link http://stackoverflow.com/a/13370709/461813 StackOverflow answer
  */
-class IdiormString {
+class TitiString {
     protected $subject;
     protected $search;
     protected $replace;
@@ -2342,7 +2342,7 @@ class IdiormString {
             \z                          # Anchor to end of string.
             /sx';
         if (!preg_match($re_valid, $this->subject)) {
-            throw new IdiormStringException("Subject string is not valid in the replace_outside_quotes context.");
+            throw new TitiStringException("Subject string is not valid in the replace_outside_quotes context.");
         }
         $re_parse = '/
             # Match one chunk of a valid string having embedded quoted substrings.
@@ -2378,7 +2378,7 @@ class IdiormString {
  * @method null setResults(array $results)
  * @method array getResults()
  */
-class IdiormResultSet implements Countable, IteratorAggregate, ArrayAccess, Serializable {
+class TitiResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serializable {
     /**
      * The current result set as an array
      * @var array
@@ -2431,7 +2431,7 @@ class IdiormResultSet implements Countable, IteratorAggregate, ArrayAccess, Seri
      * @return \ArrayIterator
      */
     public function getIterator() {
-        return new ArrayIterator($this->_results);
+        return new \ArrayIterator($this->_results);
     }
 
     /**
@@ -2493,14 +2493,14 @@ class IdiormResultSet implements Countable, IteratorAggregate, ArrayAccess, Seri
      * @example ORM::for_table('Widget')->find_many()->set('field', 'value')->save();
      * @param string $method
      * @param array $params
-     * @return \IdiormResultSet
+     * @return \TitiResultSet
      */
     public function __call($method, $params = array()) {
         foreach($this->_results as $model) {
             if (method_exists($model, $method)) {
                 call_user_func_array(array($model, $method), $params);
             } else {
-                throw new IdiormMethodMissingException("Method $method() does not exist in class " . get_class($this));
+                throw new TitiMethodMissingException("Method $method() does not exist in class " . get_class($this));
             }
         }
         return $this;
@@ -2508,8 +2508,8 @@ class IdiormResultSet implements Countable, IteratorAggregate, ArrayAccess, Seri
 }
 
 /**
- * A placeholder for exceptions eminating from the IdiormString class
+ * A placeholder for exceptions emanating from the TitiString class
  */
-class IdiormStringException extends Exception {}
+class TitiStringException extends \Exception {}
 
-class IdiormMethodMissingException extends Exception {}
+class TitiMethodMissingException extends \Exception {}

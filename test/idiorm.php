@@ -2,7 +2,7 @@
 
     /**
      *
-     * Idiorm
+     * Titi
      *
      * http://github.com/j4mie/idiorm/
      *
@@ -176,7 +176,7 @@
          * is omitted and the key is a string, the setting is
          * assumed to be the DSN string used by PDO to connect
          * to the database (often, this will be the only configuration
-         * required to use Idiorm). If you have more than one setting
+         * required to use Titi). If you have more than one setting
          * you wish to configure, another shortcut is to pass an array
          * of settings (and omit the second argument).
          * @param string $key
@@ -227,7 +227,7 @@
          * Despite its slightly odd name, this is actually the factory
          * method used to acquire instances of the class. It is named
          * this way for the sake of a readable interface, ie
-         * ORM::for_table('table_name')->find_one()-> etc. As such,
+         * \Titi\ORM::for_table('table_name')->find_one()-> etc. As such,
          * this will normally be the first method called in a chain.
          * @param string $table_name
          * @param string $connection_name Which connection to use
@@ -270,7 +270,7 @@
         }
 
         /**
-         * Set the PDO object used by Idiorm to communicate with the database.
+         * Set the PDO object used by Titi to communicate with the database.
          * This is public in case the ORM should use a ready-instantiated
          * PDO object as its database connection. Accepts an optional string key
          * to identify the connection if multiple connections are used.
@@ -296,7 +296,7 @@
         /**
          * Detect and initialise the character used to quote identifiers
          * (table names, column names etc). If this has been specified
-         * manually using ORM::configure('identifier_quote_character', 'some-char'),
+         * manually using \Titi\ORM::configure('identifier_quote_character', 'some-char'),
          * this will do nothing.
          * @param string $connection_name Which connection to use
          */
@@ -310,7 +310,7 @@
         /**
          * Detect and initialise the limit clause style ("SELECT TOP 5" /
          * "... LIMIT 5"). If this has been specified manually using 
-         * ORM::configure('limit_clause_style', 'top'), this will do nothing.
+         * \Titi\ORM::configure('limit_clause_style', 'top'), this will do nothing.
          * @param string $connection_name Which connection to use
          */
         public static function _setup_limit_clause_style($connection_name) {
@@ -354,9 +354,9 @@
                 case 'sqlsrv':
                 case 'dblib':
                 case 'mssql':
-                    return ORM::LIMIT_STYLE_TOP_N;
+                    return \Titi\ORM::LIMIT_STYLE_TOP_N;
                 default:
-                    return ORM::LIMIT_STYLE_LIMIT;
+                    return \Titi\ORM::LIMIT_STYLE_LIMIT;
             }
         }
 
@@ -369,13 +369,13 @@
          * @return PDO
          */
         public static function get_db($connection_name = self::DEFAULT_CONNECTION) {
-            self::_setup_db($connection_name); // required in case this is called before Idiorm is instantiated
+            self::_setup_db($connection_name); // required in case this is called before Titi is instantiated
             return self::$_db[$connection_name];
         }
 
         /**
          * Executes a raw query as a wrapper for PDOStatement::execute.
-         * Useful for queries that can't be accomplished through Idiorm,
+         * Useful for queries that can't be accomplished through Titi,
          * particularly those using engine-specific features.
          * @example raw_execute('SELECT `name`, AVG(`order`) FROM `customer` GROUP BY `name` HAVING AVG(`order`) > 10')
          * @example raw_execute('INSERT OR REPLACE INTO `widget` (`id`, `name`) SELECT `id`, `name` FROM `other_table`')
@@ -465,7 +465,7 @@
 
                 // Replace placeholders in the query for vsprintf
                 if(false !== strpos($query, "'") || false !== strpos($query, '"')) {
-                    $query = IdiormString::str_replace_outside_quotes("?", "%s", $query);
+                    $query = TitiString::str_replace_outside_quotes("?", "%s", $query);
                 } else {
                     $query = str_replace("?", "%s", $query);
                 }
@@ -535,7 +535,7 @@
 
         /**
          * "Private" constructor; shouldn't be called directly.
-         * Use the ORM::for_table factory method instead.
+         * Use the \Titi\ORM::for_table factory method instead.
          */
         protected function __construct($table_name, $data = array(), $connection_name = self::DEFAULT_CONNECTION) {
             $this->_table_name = $table_name;
@@ -565,7 +565,7 @@
          * Specify the ID column to use for this instance or array of instances only.
          * This overrides the id_column and id_column_overrides settings.
          *
-         * This is mostly useful for libraries built on top of Idiorm, and will
+         * This is mostly useful for libraries built on top of Titi, and will
          * not normally be used in manually built queries. If you don't know why
          * you would want to use this, you should probably just ignore it.
          */
@@ -613,7 +613,7 @@
          * from your query, and execute it. Will return an array
          * of instances of the ORM class, or an empty array if
          * no rows were returned.
-         * @return array|\IdiormResultSet
+         * @return array|\TitiResultSet
          */
         public function find_many() {
             if(self::$_config[$this->_connection_name]['return_result_sets']) {
@@ -638,10 +638,10 @@
          * Tell the ORM that you are expecting multiple results
          * from your query, and execute it. Will return a result set object
          * containing instances of the ORM class.
-         * @return \IdiormResultSet
+         * @return \TitiResultSet
          */
         public function find_result_set() {
-            return new IdiormResultSet($this->_find_many());
+            return new TitiResultSet($this->_find_many());
         }
 
         /**
@@ -1581,7 +1581,7 @@
             $result_columns = join(', ', $this->_result_columns);
 
             if (!is_null($this->_limit) &&
-                self::$_config[$this->_connection_name]['limit_clause_style'] === ORM::LIMIT_STYLE_TOP_N) {
+                self::$_config[$this->_connection_name]['limit_clause_style'] === \Titi\ORM::LIMIT_STYLE_TOP_N) {
                 $fragment .= "TOP {$this->_limit} ";
             }
 
@@ -1669,7 +1669,7 @@
         protected function _build_limit() {
             $fragment = '';
             if (!is_null($this->_limit) &&
-                self::$_config[$this->_connection_name]['limit_clause_style'] == ORM::LIMIT_STYLE_LIMIT) {
+                self::$_config[$this->_connection_name]['limit_clause_style'] == \Titi\ORM::LIMIT_STYLE_LIMIT) {
                 if (self::get_db($this->_connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME) == 'firebird') {
                     $fragment = 'ROWS';
                 } else {
@@ -1832,7 +1832,7 @@
                 self::_cache_query_result($cache_key, $rows, $this->_table_name, $this->_connection_name);
             }
 
-            // reset Idiorm after executing the query
+            // reset Titi after executing the query
             $this->_values = array();
             $this->_result_columns = array('*');
             $this->_using_default_result_columns = true;
@@ -2177,7 +2177,7 @@
             if (method_exists($this, $method)) {
                 return call_user_func_array(array($this, $method), $arguments);
             } else {
-                throw new IdiormMethodMissingException("Method $name() does not exist in class " . get_class($this));
+                throw new TitiMethodMissingException("Method $name() does not exist in class " . get_class($this));
             }
         }
 
@@ -2203,13 +2203,13 @@
 
     /**
      * A class to handle str_replace operations that involve quoted strings
-     * @example IdiormString::str_replace_outside_quotes('?', '%s', 'columnA = "Hello?" AND columnB = ?');
-     * @example IdiormString::value('columnA = "Hello?" AND columnB = ?')->replace_outside_quotes('?', '%s');
+     * @example TitiString::str_replace_outside_quotes('?', '%s', 'columnA = "Hello?" AND columnB = ?');
+     * @example TitiString::value('columnA = "Hello?" AND columnB = ?')->replace_outside_quotes('?', '%s');
      * @author Jeff Roberson <ridgerunner@fluxbb.org>
      * @author Simon Holywell <treffynnon@php.net>
      * @link http://stackoverflow.com/a/13370709/461813 StackOverflow answer
      */
-    class IdiormString {
+    class TitiString {
         protected $subject;
         protected $search;
         protected $replace;
@@ -2275,7 +2275,7 @@
                 \z                          # Anchor to end of string.
                 /sx';
             if (!preg_match($re_valid, $this->subject)) {
-                throw new IdiormStringException("Subject string is not valid in the replace_outside_quotes context.");
+                throw new TitiStringException("Subject string is not valid in the replace_outside_quotes context.");
             }
             $re_parse = '/
                 # Match one chunk of a valid string having embedded quoted substrings.
@@ -2309,7 +2309,7 @@
      * A result set class for working with collections of model instances
      * @author Simon Holywell <treffynnon@php.net>
      */
-    class IdiormResultSet implements Countable, IteratorAggregate, ArrayAccess, Serializable {
+    class TitiResultSet implements Countable, IteratorAggregate, ArrayAccess, Serializable {
         /**
          * The current result set as an array
          * @var array
@@ -2421,17 +2421,17 @@
          * Call a method on all models in a result set. This allows for method
          * chaining such as setting a property on all models in a result set or
          * any other batch operation across models.
-         * @example ORM::for_table('Widget')->find_many()->set('field', 'value')->save();
+         * @example \Titi\ORM::for_table('Widget')->find_many()->set('field', 'value')->save();
          * @param string $method
          * @param array $params
-         * @return \IdiormResultSet
+         * @return \TitiResultSet
          */
         public function __call($method, $params = array()) {
             foreach($this->_results as $model) {
                 if (method_exists($model, $method)) {
                     call_user_func_array(array($model, $method), $params);
                 } else {
-                    throw new IdiormMethodMissingException("Method $method() does not exist in class " . get_class($this));
+                    throw new TitiMethodMissingException("Method $method() does not exist in class " . get_class($this));
                 }
             }
             return $this;
@@ -2439,8 +2439,8 @@
     }
 
     /**
-     * A placeholder for exceptions eminating from the IdiormString class
+     * A placeholder for exceptions eminating from the TitiString class
      */
-    class IdiormStringException extends Exception {}
+    class TitiStringException extends Exception {}
 
-    class IdiormMethodMissingException extends Exception {}
+    class TitiMethodMissingException extends Exception {}

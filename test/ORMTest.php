@@ -1,50 +1,50 @@
 <?php
 
-class ORMTest extends PHPUnit_Framework_TestCase {
+class ORMTest extends \PHPUnit\Framework\TestCase {
 
-    public function setUp() {
+    public function setUp(): void {
         // Enable logging
-        ORM::configure('logging', true);
+        \Titi\ORM::configure('logging', true);
 
         // Set up the dummy database connection
         $db = new MockPDO('sqlite::memory:');
-        ORM::set_db($db);
+        \Titi\ORM::set_db($db);
     }
 
-    public function tearDown() {
-        ORM::reset_config();
-        ORM::reset_db();
+    public function tearDown(): void {
+        \Titi\ORM::reset_config();
+        \Titi\ORM::reset_db();
     }
 
     public function testStaticAtrributes() {
-        $this->assertEquals('0', ORM::CONDITION_FRAGMENT);
-        $this->assertEquals('1', ORM::CONDITION_VALUES);
+        $this->assertEquals('0', \Titi\ORM::CONDITION_FRAGMENT);
+        $this->assertEquals('1', \Titi\ORM::CONDITION_VALUES);
     }
 
     public function testForTable() {
-        $result = ORM::for_table('test');
-        $this->assertInstanceOf('ORM', $result);
+        $result = \Titi\ORM::for_table('test');
+        $this->assertInstanceOf('\Titi\ORM', $result);
     }
 
     public function testCreate() {
-        $model = ORM::for_table('test')->create();
-        $this->assertInstanceOf('ORM', $model);
+        $model = \Titi\ORM::for_table('test')->create();
+        $this->assertInstanceOf('\Titi\ORM', $model);
         $this->assertTrue($model->is_new());
     }
 
     public function testIsNew() {
-        $model = ORM::for_table('test')->create();
+        $model = \Titi\ORM::for_table('test')->create();
         $this->assertTrue($model->is_new());
 
-        $model = ORM::for_table('test')->create(array('test' => 'test'));
+        $model = \Titi\ORM::for_table('test')->create(array('test' => 'test'));
         $this->assertTrue($model->is_new());
     }
 
     public function testIsDirty() {
-        $model = ORM::for_table('test')->create();
+        $model = \Titi\ORM::for_table('test')->create();
         $this->assertFalse($model->is_dirty('test'));
 
-        $model = ORM::for_table('test')->create(array('test' => 'test'));
+        $model = \Titi\ORM::for_table('test')->create(array('test' => 'test'));
         $this->assertTrue($model->is_dirty('test'));
 
         $model->test = null;
@@ -56,7 +56,7 @@ class ORMTest extends PHPUnit_Framework_TestCase {
 
     public function testArrayAccess() {
         $value = 'test';
-        $model = ORM::for_table('test')->create();
+        $model = \Titi\ORM::for_table('test')->create();
         $model['test'] = $value;
         $this->assertTrue(isset($model['test']));
         $this->assertEquals($model['test'], $value);
@@ -65,44 +65,46 @@ class ORMTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testFindResultSet() {
-        $result_set = ORM::for_table('test')->find_result_set();
-        $this->assertInstanceOf('IdiormResultSet', $result_set);
+        $result_set = \Titi\ORM::for_table('test')->find_result_set();
+        $this->assertInstanceOf('\Titi\TitiResultSet', $result_set);
         $this->assertSame(count($result_set), 5);
     }
 
     public function testFindResultSetByDefault() {
-        ORM::configure('return_result_sets', true);
+        \Titi\ORM::configure('return_result_sets', true);
 
-        $result_set = ORM::for_table('test')->find_many();
-        $this->assertInstanceOf('IdiormResultSet', $result_set);
+        $result_set = \Titi\ORM::for_table('test')->find_many();
+        $this->assertInstanceOf('\Titi\TitiResultSet', $result_set);
         $this->assertSame(count($result_set), 5);
         
-        ORM::configure('return_result_sets', false);
+        \Titi\ORM::configure('return_result_sets', false);
         
-        $result_set = ORM::for_table('test')->find_many();
-        $this->assertInternalType('array', $result_set);
+        $result_set = \Titi\ORM::for_table('test')->find_many();
+        $this->assertIsArray($result_set);
         $this->assertSame(count($result_set), 5);
     }
 
     public function testGetLastPdoStatement() {
-        ORM::for_table('widget')->where('name', 'Fred')->find_one();
-        $statement = ORM::get_last_statement();
+        \Titi\ORM::for_table('widget')->where('name', 'Fred')->find_one();
+        $statement = \Titi\ORM::get_last_statement();
         $this->assertInstanceOf('MockPDOStatement', $statement);
     }
 
     /**
-     * @expectedException IdiormMethodMissingException
+     * @expectedException TitiMethodMissingException
      */
     public function testInvalidORMFunctionCallShouldCreateException() {
-        $orm = ORM::for_table('test');
+        $this->expectException(\Titi\TitiMethodMissingException::class);
+        $orm = \Titi\ORM::for_table('test');
         $orm->invalidFunctionCall();
     }
 
     /**
-     * @expectedException IdiormMethodMissingException
+     * @expectedException TitiMethodMissingException
      */
     public function testInvalidResultsSetFunctionCallShouldCreateException() {
-        $resultSet = ORM::for_table('test')->find_result_set();
+        $this->expectException(\Titi\TitiMethodMissingException::class);
+        $resultSet = \Titi\ORM::for_table('test')->find_result_set();
         $resultSet->invalidFunctionCall();
     }
 
@@ -115,7 +117,7 @@ class ORMTest extends PHPUnit_Framework_TestCase {
      */
     public function testUpdateNullPrimaryKey() {
         try {
-            $widget = ORM::for_table('widget')
+            $widget = \Titi\ORM::for_table('widget')
                 ->use_id_column('primary')
                 ->select('foo')
                 ->where('primary', 1)
@@ -125,15 +127,15 @@ class ORMTest extends PHPUnit_Framework_TestCase {
             $widget->foo = 'bar';
             $widget->save();
 
-            throw new Exception('Test did not throw expected exception');
-        } catch (Exception $e) {
+            throw new \Exception('Test did not throw expected exception');
+        } catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'Primary key ID missing from row or is null');
         }
     }
 
     public function testDeleteNullPrimaryKey() {
         try {
-            $widget = ORM::for_table('widget')
+            $widget = \Titi\ORM::for_table('widget')
                 ->use_id_column('primary')
                 ->select('foo')
                 ->where('primary', 1)
@@ -142,15 +144,15 @@ class ORMTest extends PHPUnit_Framework_TestCase {
 
             $widget->delete();
 
-            throw new Exception('Test did not throw expected exception');
-        } catch (Exception $e) {
+            throw new \Exception('Test did not throw expected exception');
+        } catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'Primary key ID missing from row or is null');
         }
     }
 
     public function testNullPrimaryKey() {
         try {
-            $widget = ORM::for_table('widget')
+            $widget = \Titi\ORM::for_table('widget')
                 ->use_id_column('primary')
                 ->select('foo')
                 ->where('primary', 1)
@@ -159,15 +161,15 @@ class ORMTest extends PHPUnit_Framework_TestCase {
 
             $widget->id(true);
 
-            throw new Exception('Test did not throw expected exception');
-        } catch (Exception $e) {
+            throw new \Exception('Test did not throw expected exception');
+        } catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'Primary key ID missing from row or is null');
         }
     }
 
     public function testNullPrimaryKeyPart() {
         try {
-            $widget = ORM::for_table('widget')
+            $widget = \Titi\ORM::for_table('widget')
                 ->use_id_column(array('id', 'primary'))
                 ->select('foo')
                 ->where('id', 1)
@@ -177,8 +179,8 @@ class ORMTest extends PHPUnit_Framework_TestCase {
 
             $widget->id(true);
 
-            throw new Exception('Test did not throw expected exception');
-        } catch (Exception $e) {
+            throw new \Exception('Test did not throw expected exception');
+        } catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'Primary key ID contains null value(s)');
         }
     }

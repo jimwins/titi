@@ -1,7 +1,9 @@
 <?php
 
-require_once dirname(__FILE__) . '/src/ORM.php';
-require_once dirname(__FILE__) . "/src/Model.php";
+require dirname(__FILE__).'/../vendor/autoload.php';
+
+use Titi\ORM;
+use Titi\Model;
 
 /**
  *
@@ -70,11 +72,6 @@ class MockPDOStatement extends PDOStatement {
 }
 
 /**
- * Another mock PDOStatement class, used for testing multiple connections
- */
-class MockDifferentPDOStatement extends MockPDOStatement { }
-
-/**
  *
  * Mock database class implementing a subset
  * of the PDO API.
@@ -133,16 +130,16 @@ class MockMsSqlPDO extends MockPDO {
 /**
  * Models for use during testing
  */
-class Simple extends Model { }
-class ComplexModelClassName extends Model { }
-class ModelWithCustomTable extends Model {
+class Simple extends \Titi\Model { }
+class ComplexModelClassName extends \Titi\Model { }
+class ModelWithCustomTable extends \Titi\Model {
     public static $_table = 'custom_table';
 }
-class ModelWithCustomTableAndCustomIdColumn extends Model {
+class ModelWithCustomTableAndCustomIdColumn extends \Titi\Model {
     public static $_table = 'custom_table';
     public static $_id_column = 'custom_id_column';
 }
-class ModelWithFilters extends Model {
+class ModelWithFilters extends \Titi\Model {
     public static function name_is_fred($orm) {
         return $orm->where('name', 'Fred');
     }
@@ -150,85 +147,85 @@ class ModelWithFilters extends Model {
         return $orm->where('name', $name);
     }
 }
-class ModelWithCustomConnection extends Model {
+class ModelWithCustomConnection extends \Titi\Model {
     const ALTERNATE = 'alternate';
     public static $_connection_name = self::ALTERNATE;
 }
 
-class Profile extends Model {
+class Profile extends \Titi\Model {
     public function user() {
         return $this->belongs_to('User');
     }
 } 
-class User extends Model {
+class User extends \Titi\Model {
     public function profile() {
         return $this->has_one('Profile');
     }
 }
-class UserTwo extends Model {
+class UserTwo extends \Titi\Model {
     public function profile() {
         return $this->has_one('Profile', 'my_custom_fk_column');
     }
 }
-class UserFive extends Model {
+class UserFive extends \Titi\Model {
     public function profile() {
         return $this->has_one('Profile', 'my_custom_fk_column', 'name');
     }
 }
-class ProfileTwo extends Model {
+class ProfileTwo extends \Titi\Model {
     public function user() {
         return $this->belongs_to('User', 'custom_user_fk_column');
     }
 }
-class ProfileThree extends Model {
+class ProfileThree extends \Titi\Model {
     public function user() {
         return $this->belongs_to('User', 'custom_user_fk_column', 'name');
     }
 }
-class Post extends Model { }
-class UserThree extends Model {
+class Post extends \Titi\Model { }
+class UserThree extends \Titi\Model {
     public function posts() {
         return $this->has_many('Post');
     }
 }
-class UserFour extends Model {
+class UserFour extends \Titi\Model {
     public function posts() {
         return $this->has_many('Post', 'my_custom_fk_column');
     }
 }
-class UserSix extends Model {
+class UserSix extends \Titi\Model {
     public function posts() {
         return $this->has_many('Post', 'my_custom_fk_column', 'name');
     }
 }
-class Author extends Model { }
-class AuthorBook extends Model { }
-class Book extends Model {
+class Author extends \Titi\Model { }
+class AuthorBook extends \Titi\Model { }
+class Book extends \Titi\Model {
     public function authors() {
         return $this->has_many_through('Author');
     }
 }
-class BookTwo extends Model {
+class BookTwo extends \Titi\Model {
     public function authors() {
         return $this->has_many_through('Author', 'AuthorBook', 'custom_book_id', 'custom_author_id');
     }
 }
-class BookThree extends Model {
+class BookThree extends \Titi\Model {
     public function authors() {
         return $this->has_many_through('Author', 'AuthorBook', 'custom_book_id', 'custom_author_id', 'custom_book_id_in_book_table', 'custom_author_id_in_author_table');
     }
 }
-class BookFour extends Model {
+class BookFour extends \Titi\Model {
     public function authors() {
         return $this->has_many_through('Author', 'AuthorBook', 'custom_book_id', 'custom_author_id', null, 'custom_author_id_in_author_table');
     }
 }
-class BookFive extends Model {
+class BookFive extends \Titi\Model {
     public function authors() {
         return $this->has_many_through('Author', 'AuthorBook', 'custom_book_id', 'custom_author_id', 'custom_book_id_in_book_table');
     }
 }
-class MockPrefix_Simple extends Model { } 
-class MockPrefix_TableSpecified extends Model {
+class MockPrefix_Simple extends \Titi\Model { } 
+class MockPrefix_TableSpecified extends \Titi\Model {
     public static $_table = 'simple';
 } 

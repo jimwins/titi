@@ -1,31 +1,31 @@
 <?php
 
-class QueryBuilderMssqlTest extends PHPUnit_Framework_TestCase {
+class QueryBuilderMssqlTest extends \PHPUnit\Framework\TestCase {
 
-    public function setUp() {
+    public function setUp(): void {
         // Enable logging
-        ORM::configure('logging', true);
+        \Titi\ORM::configure('logging', true);
 
         // Set up the dummy database connection
         $db = new MockMsSqlPDO('sqlite::memory:');
-        ORM::set_db($db);
+        \Titi\ORM::set_db($db);
     }
 
-    public function tearDown() {
-        ORM::reset_config();
-        ORM::reset_db();
+    public function tearDown(): void {
+        \Titi\ORM::reset_config();
+        \Titi\ORM::reset_db();
     }
 
     public function testFindOne() {
-        ORM::for_table('widget')->find_one();
+        \Titi\ORM::for_table('widget')->find_one();
         $expected = 'SELECT TOP 1 * FROM "widget"';
-        $this->assertEquals($expected, ORM::get_last_query());
+        $this->assertEquals($expected, \Titi\ORM::get_last_query());
     }
 
     public function testLimit() {
-        ORM::for_table('widget')->limit(5)->find_many();
+        \Titi\ORM::for_table('widget')->limit(5)->find_many();
         $expected = 'SELECT TOP 5 * FROM "widget"';
-        $this->assertEquals($expected, ORM::get_last_query());
+        $this->assertEquals($expected, \Titi\ORM::get_last_query());
     }
     
 }

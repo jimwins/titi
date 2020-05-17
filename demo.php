@@ -1,16 +1,16 @@
 <?php
 
     // ------------------- //
-    // --- Idiorm Demo --- //
+    // ---  Titi Demo  --- //
     // ------------------- //
 
     // Note: This is just about the simplest database-driven webapp it's possible to create
-    // and is designed only for the purpose of demonstrating how Idiorm works.
+    // and is designed only for the purpose of demonstrating how Titi works.
 
     // In case it's not obvious: this is not the correct way to build web applications!
 
-    // Require the idiorm file
-    require_once("idiorm.php");
+    // Use the base ORM class
+    use Titi\ORM;
 
     // Connect to the demo database file
     ORM::configure('sqlite:./demo.sqlite');
@@ -54,12 +54,12 @@
 
 <html>
     <head>
-        <title>Idiorm Demo</title>
+        <title>ORM Demo</title>
     </head>
 
     <body>
     
-        <h1>Idiorm Demo</h1>
+        <h1>ORM Demo</h1>
 
         <h2>Contact List (<?php echo $count; ?> contacts)</h2>
         <ul>

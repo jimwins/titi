@@ -15,7 +15,7 @@ namespace Titi;
  * @method void setClassName($class_name)
  * @method static \ORMWrapper forTable($table_name, $connection_name = parent::DEFAULT_CONNECTION)
  * @method \Model findOne($id=null)
- * @method Array|\IdiormResultSet findMany()
+ * @method Array|\TitiResultSet findMany()
  */
 class ORMWrapper extends ORM {
 
@@ -77,7 +77,7 @@ class ORMWrapper extends ORM {
     /**
      * Method to create an instance of the model class
      * associated with this wrapper and populate
-     * it with the supplied Idiorm instance.
+     * it with the supplied ORM instance.
      *
      * @param  ORM $orm
      * @return bool|Model
@@ -92,7 +92,7 @@ class ORMWrapper extends ORM {
     }
 
     /**
-     * Wrap Idiorm's find_one method to return
+     * Wrap ORM's find_one method to return
      * an instance of the class associated with
      * this wrapper instead of the raw ORM class.
      *
@@ -104,7 +104,7 @@ class ORMWrapper extends ORM {
     }
 
     /**
-     * Wrap Idiorm's find_many method to return
+     * Wrap ORM's find_many method to return
      * an array of instances of the class associated
      * with this wrapper instead of the raw ORM class.
      *
@@ -119,7 +119,7 @@ class ORMWrapper extends ORM {
     }
 
     /**
-     * Wrap Idiorm's create method to return an
+     * Wrap ORM's create method to return an
      * empty instance of the class associated with
      * this wrapper instead of the raw ORM class.
      *
@@ -134,7 +134,7 @@ class ORMWrapper extends ORM {
  * Model base class. Your model objects should extend
  * this class. A minimal subclass would look like:
  *
- * class Widget extends Model {
+ * class Widget extends \Titi\Model {
  * }
  *
  *
@@ -595,7 +595,7 @@ class Model {
     }
 
     /**
-     * Wrapper for Idiorm's as_array method.
+     * Wrapper for ORM's as_array method.
      *
      * @return Array
      */
@@ -680,5 +680,3 @@ class Model {
         }
     }
 }
-
-class TitiMethodMissingException extends Exception {}

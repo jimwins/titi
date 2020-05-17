@@ -1,20 +1,22 @@
 <?php
 
-class MagicMethodsTest extends PHPUnit_Framework_TestCase {
+use Titi\Model;
 
-    public function setUp() {
+class MagicMethodsTest extends \PHPUnit\Framework\TestCase {
+
+    public function setUp(): void {
         // Set up the dummy database connection
-        ORM::set_db(new MockPDO('sqlite::memory:'));
+        \Titi\ORM::set_db(new MockPDO('sqlite::memory:'));
 
         // Enable logging
-        ORM::configure('logging', true);
+        \Titi\ORM::configure('logging', true);
         
         Model::$auto_prefix_models = null;
     }
 
-    public function tearDown() {
-        ORM::configure('logging', false);
-        ORM::set_db(null);
+    public function tearDown(): void {
+        \Titi\ORM::configure('logging', false);
+        \Titi\ORM::set_db(null);
 
         Model::$auto_prefix_models = null;
     }
