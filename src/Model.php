@@ -15,7 +15,7 @@ namespace Titi;
  * @method void setClassName($class_name)
  * @method static \ORMWrapper forTable($table_name, $connection_name = parent::DEFAULT_CONNECTION)
  * @method \Model findOne($id=null)
- * @method Array|\TitiResultSet findMany()
+ * @method Array|ResultSet findMany()
  */
 class ORMWrapper extends ORM {
 

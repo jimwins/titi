@@ -31,8 +31,8 @@ namespace Titi;
  * @method array getConnectionNames()
  * @method $this useIdColumn($id_column)
  * @method \ORM|bool findOne($id=null)
- * @method array|\TitiResultSet findMany()
- * @method \TitiResultSet findResultSet()
+ * @method array|ResultSet findMany()
+ * @method ResultSet findResultSet()
  * @method array findArray()
  * @method $this forceAllDirty()
  * @method $this rawQuery($query, $parameters = array())
@@ -674,7 +674,7 @@ class ORM implements \ArrayAccess {
      * from your query, and execute it. Will return an array
      * of instances of the ORM class, or an empty array if
      * no rows were returned.
-     * @return array|\TitiResultSet
+     * @return array|ResultSet
      */
     public function find_many() {
         if(self::$_config[$this->_connection_name]['return_result_sets']) {
@@ -699,10 +699,10 @@ class ORM implements \ArrayAccess {
      * Tell the ORM that you are expecting multiple results
      * from your query, and execute it. Will return a result set object
      * containing instances of the ORM class.
-     * @return \TitiResultSet
+     * @return ResultSet
      */
     public function find_result_set() {
-        return new TitiResultSet($this->_find_many());
+        return new ResultSet($this->_find_many());
     }
 
     /**
@@ -2373,12 +2373,17 @@ class TitiString {
 }
 
 /**
+ * A placeholder for exceptions emanating from the TitiString class
+ */
+class TitiStringException extends \Exception {}
+
+/**
  * A result set class for working with collections of model instances
  * @author Simon Holywell <treffynnon@php.net>
  * @method null setResults(array $results)
  * @method array getResults()
  */
-class TitiResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serializable {
+class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serializable {
     /**
      * The current result set as an array
      * @var array
@@ -2493,7 +2498,7 @@ class TitiResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Se
      * @example ORM::for_table('Widget')->find_many()->set('field', 'value')->save();
      * @param string $method
      * @param array $params
-     * @return \TitiResultSet
+     * @return ResultSet
      */
     public function __call($method, $params = array()) {
         foreach($this->_results as $model) {
@@ -2506,10 +2511,5 @@ class TitiResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Se
         return $this;
     }
 }
-
-/**
- * A placeholder for exceptions emanating from the TitiString class
- */
-class TitiStringException extends \Exception {}
 
 class TitiMethodMissingException extends \Exception {}

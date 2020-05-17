@@ -196,7 +196,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase {
 
     public function testFindResultSet() {
         $result_set = Model::factory('BookFive')->find_result_set();
-        $this->assertInstanceOf('\Titi\TitiResultSet', $result_set);
+        $this->assertInstanceOf('\Titi\ResultSet', $result_set);
         $this->assertSame(count($result_set), 5);
     }
 

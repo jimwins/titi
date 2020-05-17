@@ -66,7 +66,7 @@ class ORMTest extends \PHPUnit\Framework\TestCase {
 
     public function testFindResultSet() {
         $result_set = \Titi\ORM::for_table('test')->find_result_set();
-        $this->assertInstanceOf('\Titi\TitiResultSet', $result_set);
+        $this->assertInstanceOf('\Titi\ResultSet', $result_set);
         $this->assertSame(count($result_set), 5);
     }
 
@@ -74,7 +74,7 @@ class ORMTest extends \PHPUnit\Framework\TestCase {
         \Titi\ORM::configure('return_result_sets', true);
 
         $result_set = \Titi\ORM::for_table('test')->find_many();
-        $this->assertInstanceOf('\Titi\TitiResultSet', $result_set);
+        $this->assertInstanceOf('\Titi\ResultSet', $result_set);
         $this->assertSame(count($result_set), 5);
         
         \Titi\ORM::configure('return_result_sets', false);
