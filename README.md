@@ -9,7 +9,7 @@ Titi was forked from [Idiorm and Paris](http://j4mie.github.com/idiormandparis/)
 
 ---
 
-Tested on PHP 7.4.5 and MySQL 8.0.16 - may work on earlier versions with PDO
+Tested on PHP 7.3.11 and MySQL 8.0.16 - may work on earlier versions with PDO
 and the correct database drivers.
 
 Released under a [BSD license](http://en.wikipedia.org/wiki/BSD_licenses).
