@@ -2177,7 +2177,7 @@
             if (method_exists($this, $method)) {
                 return call_user_func_array(array($this, $method), $arguments);
             } else {
-                throw new TitiMethodMissingException("Method $name() does not exist in class " . get_class($this));
+                throw new MethodMissingException("Method $name() does not exist in class " . get_class($this));
             }
         }
 
@@ -2431,7 +2431,7 @@
                 if (method_exists($model, $method)) {
                     call_user_func_array(array($model, $method), $params);
                 } else {
-                    throw new TitiMethodMissingException("Method $method() does not exist in class " . get_class($this));
+                    throw new MethodMissingException("Method $method() does not exist in class " . get_class($this));
                 }
             }
             return $this;
@@ -2443,4 +2443,4 @@
      */
     class TitiStringException extends Exception {}
 
-    class TitiMethodMissingException extends Exception {}
+    class MethodMissingException extends Exception {}

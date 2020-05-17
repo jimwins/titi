@@ -201,19 +201,19 @@ class ModelTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @expectedException TitiMethodMissingException
+     * @expectedException MethodMissingException
      */
     public function testInvalidModelFunctionCallDoesNotRecurse() {
-        $this->expectException(\Titi\TitiMethodMissingException::class);
+        $this->expectException(\Titi\MethodMissingException::class);
         $model = new Model();
         $model->noneExistentFunction();
     }
 
     /**
-     * @expectedException TitiMethodMissingException
+     * @expectedException MethodMissingException
      */
     public function testInvalidORMWrapperFunctionCallDoesNotRecurse() {
-        $this->expectException(\Titi\TitiMethodMissingException::class);
+        $this->expectException(\Titi\MethodMissingException::class);
         $ORMWrapper = Model::factory('Simple');
         $ORMWrapper->noneExistentFunction();
     }

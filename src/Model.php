@@ -668,7 +668,7 @@ class Model {
      *
      * @param  string $name
      * @param  array  $arguments
-     * @throws TitiMethodMissingException
+     * @throws MethodMissingException
      * @return bool|ORMWrapper
      */
     public function __call($name, $arguments) {
@@ -676,7 +676,7 @@ class Model {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $arguments);
         } else {
-            throw new TitiMethodMissingException("Method $name() does not exist in class " . get_class($this));
+            throw new MethodMissingException("Method $name() does not exist in class " . get_class($this));
         }
     }
 }

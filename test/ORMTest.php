@@ -91,19 +91,19 @@ class ORMTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @expectedException TitiMethodMissingException
+     * @expectedException MethodMissingException
      */
     public function testInvalidORMFunctionCallShouldCreateException() {
-        $this->expectException(\Titi\TitiMethodMissingException::class);
+        $this->expectException(\Titi\MethodMissingException::class);
         $orm = \Titi\ORM::for_table('test');
         $orm->invalidFunctionCall();
     }
 
     /**
-     * @expectedException TitiMethodMissingException
+     * @expectedException MethodMissingException
      */
     public function testInvalidResultsSetFunctionCallShouldCreateException() {
-        $this->expectException(\Titi\TitiMethodMissingException::class);
+        $this->expectException(\Titi\MethodMissingException::class);
         $resultSet = \Titi\ORM::for_table('test')->find_result_set();
         $resultSet->invalidFunctionCall();
     }
