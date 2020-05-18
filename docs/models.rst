@@ -184,7 +184,7 @@ IDE Auto-complete
 
 As the model does not require you to specify a method/function per database column
 it can be difficult to know what properties are available on a particular model.
-Due to the magic nature of PHP's `__get()`_ method it is impossible for an IDE
+Due to the magic nature of PHP's `__get() <https://www.php.net/manual/en/language.oop5.overloading.php#object.get>`_ method it is impossible for an IDE
 to give you autocomplete hints as well.
 
 To work around this you can use PHPDoc comment blocks to list the properties of
@@ -274,5 +274,4 @@ called ``$_id_column``:
 does not respect column names specified in ORM’s configuration.
 
 .. _Active Record pattern: http://martinfowler.com/eaaCatalog/activeRecord.html
-.. ___get: https://secure.php.net/manual/en/language.oop5.overloading.php#object.get
 .. _PHPDoc manual @property: https://www.phpdoc.org/docs/latest/references/phpdoc/tags/property.html

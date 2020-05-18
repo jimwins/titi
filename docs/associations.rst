@@ -85,7 +85,7 @@ override this behaviour, add a second argument to your ``has_one`` call,
 passing the name of the column to use.
 
 In addition, models assume that the foreign key column in the current (base)
- table is the primary key column of the base table. In the example above, 
+table is the primary key column of the base table. In the example above,
 the model will use the column called ``user_id`` (assuming ``user_id`` is the 
 primary key for the user table) in the base table (in this case the user table) 
 as the foreign key column in the base table. To override this behaviour, 
