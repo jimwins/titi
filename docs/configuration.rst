@@ -260,7 +260,7 @@ To save having type out model class name prefixes whenever code utilises ``Model
 it is possible to specify a prefix that will be prepended onto the class name.
 
 The model prefix is treated the same way as any other class name when the Model
-attempts to convert it to a table name. This is documented in the :doc:`Models`
+attempts to convert it to a table name. This is documented in the :doc:`models`
 section of the documentation.
 
 Here is a namespaced example to make it clearer:
@@ -280,7 +280,7 @@ Model prefix will cause ``Class not found`` errors.
 
     Model class property ``$_table`` sets an explicit table name, ignoring the
     ``$auto_prefix_models`` property in your individual model classes. See documentation in
-    the :doc:`Models` section of the documentation.
+    the :doc:`models` section of the documentation.
 
 Model prefixing
 ~~~~~~~~~~~~~~~

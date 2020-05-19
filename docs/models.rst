@@ -253,7 +253,7 @@ Auto prefixing
 To save having type out model class name prefixes whenever code utilises ``Model::for_table()``
 it is possible to specify a prefix that will be prepended onto the class name.
 
-See the :doc:`Configuration` documentation for more details.
+See the :doc:`configuration` documentation for more details.
 
 ID column
 ~~~~~~~~~
