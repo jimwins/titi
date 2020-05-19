@@ -1,6 +1,7 @@
 Multiple Connections
 ====================
-Titi now works with multiple conections. Most of the static functions
+
+Titi can work with multiple conections. Most of the static functions
 work with an optional connection name as an extra parameter. For the
 ``ORM::configure`` method, this means that when passing connection
 strings for a new connection, the second parameter, which is typically
@@ -10,7 +11,9 @@ provided, it defaults to ``ORM::DEFAULT_CONNECTION``.
 When chaining, once ``for_table()`` has been used in the chain, remaining
 calls in the chain use the correct connection.
 
-The connection to use can be specified in two separate ways. To indicate a default connection key for a subclass of ``Model``, create a public static property in your model class called ``$_connection_name``.
+The connection to use can be specified in two separate ways. To indicate
+a default connection key for a subclass of ``Model``, create a public static
+property in your model class called ``$_connection_name``.
 
 .. code-block:: php
 
@@ -22,16 +25,16 @@ The connection to use can be specified in two separate ways. To indicate a defau
     ORM::configure('mysql:host=localhost;dbname=my_database', null, 'remote');
     ORM::configure('username', 'database_user', 'remote');
     ORM::configure('password', 'top_secret', 'remote');
-    
+
     // Using default connection
     $person = ORM::for_table('person')->find_one(5);
-    
+
     // Using default connection, explicitly
     $person = ORM::for_table('person', ORM::DEFAULT_CONNECTION)->find_one(5);
-    
+
     // Using named connection
     $person = ORM::for_table('different_person', 'remote')->find_one(5);
-    
+
     // A named connection, where 'alternate' is an arbitray key name
     ORM::configure('sqlite:./example2.db', null, 'alternate');
 
@@ -48,22 +51,10 @@ The connection to use can also be specified as an optional additional parameter 
     $person = Model::factory('Author', 'alternate')->find_one(1);  // Uses connection named 'alternate'
 
 The connection can be changed after a model is populated, should that be necessary:
-    
+
 .. code-block:: php
 
     <?php
-
-    // Using default connection, explicitly
-    $person = ORM::for_table('person')->find_one(5);
-    
-    // Using named connection
-    $person = ORM::for_table('different_person', 'remote')->find_one(5);
-
-    // Last query on *any* connection
-    ORM::get_last_query(); // returns query on 'different_person' using 'remote'
-    
-    // returns query on 'person' using default by passing in the connection name
-    ORM::get_last_query(ORM::DEFAULT_CONNECTION);
 
     $person = Model::factory('Author')->find_one(1);     // Uses default connection
     $person->orm = Model::factory('Author', 'alternate');  // Switches to connection named 'alternate'
@@ -78,8 +69,7 @@ Notes
   one connection has logging set to ``true`` and the other does not, only
   queries from the logged connection will be available via
   ``ORM::get_last_query()`` and ``ORM::get_query_log()``.
-* A new method has been added, ``ORM::get_connection_names()``, which returns
-  an array of connection names.
+* ``ORM::get_connection_names()``, which returns an array of connection names.
 * Caching *should* work with multiple connections (remember to turn caching
   on for each connection), but the unit tests are not robust. Please report
   any errors.

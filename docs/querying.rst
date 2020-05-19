@@ -10,7 +10,7 @@ with the concept of a fluent interface. It just means that you can
 code more readable, as the method calls strung together in order can
 start to look a bit like a sentence.
 
-All Idiorm queries start with a call to the ``for_table`` static method
+All Titi queries start with a call to the ``for_table`` static method
 on the ORM class. This tells the ORM which table to use when making the
 query.
 
@@ -24,7 +24,7 @@ the result.
 
 Let's start with a simple example. Say we have a table called ``person``
 which contains the columns ``id`` (the primary key of the record -
-Idiorm assumes the primary key column is called ``id`` but this is
+the ORM assumes the primary key column is called ``id`` but this is
 configurable, see below), ``name``, ``age`` and ``gender``.
 
 A note on PSR-1 and camelCase
@@ -43,12 +43,12 @@ being converted to a PSR-1 compliant style.
     // PSR-1 compliant style
     $person = ORM::forTable('person')->where('name', 'Fred Bloggs')->findOne();
 
-As you can see any method can be changed from the documented underscore (_) format
-to that of a camelCase method name.
+As you can see any method can be changed from the documented underscore (_)
+format to that of a camelCase method name.
 
 .. note::
 
-    In the background the PSR-1 compliant style uses the `__call()` and 
+    In the background the PSR-1 compliant style uses the `__call()` and
     `__callStatic()` magic methods to map the camelCase method name you supply
     to the original underscore method name. It then uses `call_user_func_array()`
     to apply the arguments to the method. If this minimal overhead is too great
@@ -136,7 +136,7 @@ As a result set
 
        ORM::configure('return_result_sets', true);
 
-You can also find many records as a result set instead of an array of Idiorm
+You can also find many records as a result set instead of an array of ORM
 instances. This gives you the advantage that you can run batch operations on a
 set of results.
 
@@ -179,14 +179,14 @@ over it just like an array.
     echo count(ORM::for_table('person')->find_result_set());
 
 .. note::
-   
+
    For deleting many records it is recommended that you use `delete_many()` as it
    is more efficient than calling `delete()` on a result set.
 
 As an associative array
 '''''''''''''''''''''''
 
-You can also find many records as an associative array instead of Idiorm
+You can also find many records as an associative array instead of ORM
 instances. To do this substitute any call to ``find_many()`` with
 ``find_array()``.
 
@@ -213,9 +213,9 @@ query, call the ``count()`` method.
 Filtering results
 ^^^^^^^^^^^^^^^^^
 
-Idiorm provides a family of methods to extract only records which
+Titi provides a family of methods to extract only records which
 satisfy some condition or conditions. These methods may be called
-multiple times to build up your query, and Idiorm's fluent interface
+multiple times to build up your query, and Titi's fluent interface
 allows method calls to be *chained* to create readable and
 simple-to-understand queries.
 
@@ -223,17 +223,17 @@ simple-to-understand queries.
 '''''''''
 
 Only a subset of the available conditions supported by SQL are available
-when using Idiorm. Additionally, all the ``WHERE`` clauses will be
+when using Titi. Additionally, all the ``WHERE`` clauses will be
 ``AND``\ ed together when the query is run. Support for ``OR``\ ing
 ``WHERE`` clauses is not currently present.
 
 These limits are deliberate: these are by far the most commonly used
-criteria, and by avoiding support for very complex queries, the Idiorm
+criteria, and by avoiding support for very complex queries, the Titi
 codebase can remain small and simple.
 
 Some support for more complex conditions and queries is provided by the
 ``where_raw`` and ``raw_query`` methods (see below). If you find
-yourself regularly requiring more functionality than Idiorm can provide,
+yourself regularly requiring more functionality than Titi can provide,
 it may be time to consider using a more full-featured ORM.
 
 Equality: ``where``, ``where_equal``, ``where_not_equal``
@@ -317,7 +317,7 @@ Multiple OR'ed conditions
 
 You can add simple OR'ed conditions to the same WHERE clause using ``where_any_is``. You
 should specify multiple conditions using an array of items. Each item will be an
-associative array that contains a multiple conditions. 
+associative array that contains a multiple conditions.
 
 .. code-block:: php
 
@@ -495,7 +495,7 @@ Having
 When using aggregate functions in combination with a ``GROUP BY`` you can use
 ``HAVING`` to filter based on those values.
 
-``HAVING`` works in exactly the same way as all of the ``where*`` functions in Idiorm.
+``HAVING`` works in exactly the same way as all of the ``where*`` functions in Titi.
 Substitute ``where_`` for ``having_`` to make use of these functions.
 
 For example:
@@ -669,7 +669,7 @@ This will result in the query:
 Joins
 ^^^^^
 
-Idiorm has a family of methods for adding different types of ``JOIN``\ s
+Titi has a family of methods for adding different types of ``JOIN``\ s
 to the queries it constructs:
 
 Methods: ``join``, ``inner_join``, ``left_outer_join``,
@@ -724,11 +724,11 @@ Raw JOIN clauses
 If you need to construct a more complex query, you can use the ``raw_join``
 method to specify the SQL fragment for the JOIN clause exactly. This
 method takes four required arguments: the string to add to the query,
-the conditions is as an *array* containing three components: 
+the conditions is as an *array* containing three components:
 the first column, the operator, and the second column, the table alias and
-(optional) the parameters array. If parameters are supplied, 
-the string should contain question mark characters (``?``) to represent 
-the values to be bound, and the parameter array should contain the values 
+(optional) the parameters array. If parameters are supplied,
+the string should contain question mark characters (``?``) to represent
+the values to be bound, and the parameter array should contain the values
 to be substituted into the string in the correct order.
 
 This method may be used in a method chain alongside other ``*_join``
@@ -741,10 +741,10 @@ with preceding and following JOIN clauses.
     <?php
     $people = ORM::for_table('person')
                 ->raw_join(
-                    'JOIN (SELECT * FROM role WHERE role.name = ?)', 
-                    array('person.role_id', '=', 'role.id'), 
-                    'role', 
-                    array('role' => 'janitor'))    
+                    'JOIN (SELECT * FROM role WHERE role.name = ?)',
+                    array('person.role_id', '=', 'role.id'),
+                    'role',
+                    array('role' => 'janitor'))
                 ->order_by_asc('person.name')
                 ->find_many();
 
@@ -802,10 +802,10 @@ to know which table to update.
 .. note::
 
     Using ``raw_query`` is advanced and possibly dangerous, and
-    Idiorm does not make any attempt to protect you from making errors when
+    Titi does not make any attempt to protect you from making errors when
     using this method. If you find yourself calling ``raw_query`` often, you
     may have misunderstood the purpose of using an ORM, or your application
-    may be too complex for Idiorm. Consider using a more full-featured
+    may be too complex for Titi. Consider using a more full-featured
     database abstraction system.
 
 Raw SQL execution using PDO
@@ -813,19 +813,19 @@ Raw SQL execution using PDO
 
 .. warning::
 
-    By using this function you're dropping down to PHPs PDO directly. Idiorm
-    does not make any attempt to protect you from making errors when using this
-    method.
+    By using this function you're dropping down to PHPs PDO directly. Titi
+    does not make any attempt to protect you from making errors when using
+    this method.
 
-    You're essentially just using Idiorm to manage the connection and configuration
-    when you implement ``raw_execute()``.
+    You're essentially just using Titi to manage the connection and
+    configuration when you implement ``raw_execute()``.
 
 It can be handy, in some instances, to make use of the PDO instance underneath
-Idiorm to make advanced queries. These can be things like dropping a table from
-the database that Idiorm doesn't support and will not support in the future. These
-are operations that fall outside the 80/20 philosophy of Idiorm. That said there is
-a lot of interest in this function and quite a lot of support requests related to
-it.
+Titi to make advanced queries. These can be things like dropping a table from
+the database that Titi doesn't support and will not support in the future.
+These are operations that fall outside the 80/20 philosophy of Titi. That
+said there is a lot of interest in this function and quite a lot of support
+requests related to it.
 
 This method directly maps to `PDOStatement::execute()`_ underneath so please
 familiarise yourself with it's documentation.
@@ -849,10 +849,10 @@ Selecting rows
 
 .. warning::
 
-    You really, should not be doing this, use Idiorm with ``raw_query()`` instead
+    You really, should not be doing this, use Titi with ``raw_query()`` instead
     where possible.
 
-Here is a simple query implemented using ``raw_execute()`` - note the call to 
+Here is a simple query implemented using ``raw_execute()`` - note the call to
 ``ORM::get_last_statement()`` as ``raw_execute()`` returns a boolean as per the
 `PDOStatement::execute()`_ underneath.
 
@@ -866,24 +866,25 @@ Here is a simple query implemented using ``raw_execute()`` - note the call to
         var_dump($row);
     }
 
-It is also worth noting that ``$statement`` is a ``PDOStatement`` instance so calling
-its ``fetch()`` method is the same as if you had called against PDO without Idiorm.
+It is also worth noting that ``$statement`` is a ``PDOStatement`` instance so
+calling its ``fetch()`` method is the same as if you had called against PDO
+without Titi being involved.
 
 Getting the PDO instance
 ''''''''''''''''''''''''
 
 .. warning::
 
-    By using this function you're dropping down to PHPs PDO directly. Idiorm
+    By using this function you're dropping down to PHP's PDO directly. Titi
     does not make any attempt to protect you from making errors when using this
     method.
 
-    You're essentially just using Idiorm to manage the connection and configuration
+    You're essentially just using Titi to manage the connection and configuration
     when you implement against ``get_db()``.
 
-If none of the preceeding methods suit your purposes then you can also get direct
-access to the PDO instance underneath Idiorm using ``ORM::get_db()``. This will
-return a configured instance of `PDO`_.
+If none of the preceeding methods suit your purposes then you can also get
+direct access to the PDO instance underneath Titi using ``ORM::get_db()``.
+This will return a configured instance of `PDO`_.
 
 .. code-block:: php
 
@@ -896,30 +897,42 @@ return a configured instance of `PDO`_.
 .. _PDOStatement::execute(): https://secure.php.net/manual/en/pdostatement.execute.php
 .. _PDO: https://secure.php.net/manual/en/class.pdo.php
 
+Querying with Models
+^^^^^^^^^^^^^^^^^^^^
+
 Querying allows you to select data from your database and populate
 instances of your model classes. Queries start with a call to a static
 *factory method* on the base ``Model`` class that takes a single
 argument: the name of the model class you wish to use for your query.
 This factory method is then used as the start of a *method chain* which
-gives you full access to `Idiorm`_\ ’s fluent query API. **See Idiorm’s
-documentation for details of this API.**
+gives you full access to Titi’s fluent query API.
 
+.. code-block:: php
+
+    <?php
     $users = Model::factory('User')
         ->where('name', 'Fred')
         ->where_gte('age', 20)
         ->find_many();
 
-You can also use the same shortcut provided by Idiorm when looking up a
+You can also use the same shortcut provided by Titi when looking up a
 record by its primary key ID:
+
+.. code-block:: php
+
+    <?php
     $user = Model::factory('User')->find_one($id);
 
-If you are using PHP 5.3+ you can also do the following: 
+If you are using PHP 5.3+ you can also do the following:
+
+.. code-block:: php
+
+    <?php
     $users = User::where('name', 'Fred')
         ->where_gte('age', 20)
         ->find_many();
-        
-This does the same as the example above but is shorter and more readable.
 
+This does the same as the example above but is shorter and more readable.
 
 The only differences between using the ORM class and the Model classes for
 querying are as follows:
@@ -930,69 +943,65 @@ querying are as follows:
 
 2. The ``find_one`` and ``find_many`` methods will return instances of
    *your model subclass*, instead of the base ``ORM`` class. Like
-   Idiorm, ``find_one`` will return a single instance or ``false`` if no
+   ORM, ``find_one`` will return a single instance or ``false`` if no
    rows matched your query, while ``find_many`` will return an array of
    instances, which may be empty if no rows matched.
 
 3. Custom filtering, see next section.
 
 You may also retrieve a count of the number of rows returned by your
-query. This method behaves exactly like Idiorm’s ``count`` method:
+query. This method behaves exactly like ORM’s ``count`` method:
+
+.. code-block:: php
+
+    <?php
     $count = Model::factory('User')->where_lt('age', 20)->count();
-
-A note on PSR-1 and camelCase
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-All the methods detailed in the documentation can also be called in a PSR-1 way:
-underscores (_) become camelCase. Here follows an example of one query chain
-being converted to a PSR-1 compliant style.
-    // documented and default style
-    $count = Model::factory('User')->where_lt('age', 20)->find_one();
-
-    // PSR-1 compliant style
-    $count = Model::factory('User')->whereLt('age', 20)->findOne();
-
-As you can see any method can be changed from the documented underscore (_) format
-to that of a camelCase method name.
-
-.. note::
-
-    In the background the PSR-1 compliant style uses the `__call()` and 
-    `__callStatic()` magic methods to map the camelCase method name you supply
-    to the original underscore method name. It then uses `call_user_func_array()`
-    to apply the arguments to the method. If this minimal overhead is too great
-    then you can simply revert to using the underscore methods to avoid it. In
-    general this will not be a bottle neck in any application however and should
-    be considered a micro-optimisation.
-
-    As `__callStatic()` was added in PHP 5.3.0 you will need at least that version
-    of PHP to use this feature in any meaningful way.
 
 Getting data from objects, updating and inserting data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The model instances returned by your queries now behave exactly as if
-they were instances of Idiorm’s raw ``ORM`` class.
+they were instances of Titi’s raw ``ORM`` class.
 
 You can access data:
+
+.. code-block:: php
+
+    <?php
     $user = Model::factory('User')->find_one($id);
     echo $user->name;
 
 Update data and save the instance:
+
+.. code-block:: php
+
+    <?php
     $user = Model::factory('User')->find_one($id);
     $user->name = 'Paris';
     $user->save();
 
 To create a new (empty) instance, use the ``create`` method:
+
+.. code-block:: php
+
+    <?php
     $user = Model::factory('User')->create();
     $user->name = 'Paris';
     $user->save();
 
 To check whether a property has been changed since the object was
 created (or last saved), call the ``is_dirty`` method:
+
+.. code-block:: php
+
+    <?php
     $name_has_changed = $person->is_dirty('name'); // Returns true or false
 
 You can also use database expressions when setting values on your model:
+
+.. code-block:: php
+
+    <?php
     $user = Model::factory('User')->find_one($id);
     $user->name = 'Paris';
     $user->set_expr('last_logged_in', 'NOW()');
@@ -1000,6 +1009,10 @@ You can also use database expressions when setting values on your model:
 
 Of course, because these objects are instances of your base model
 classes, you can also call methods that you have defined on them:
+
+.. code-block:: php
+
+    <?php
     class User extends Model {
         public function full_name() {
             return $this->first_name . ' ' . $this->last_name;
@@ -1011,6 +1024,10 @@ classes, you can also call methods that you have defined on them:
 
 To delete the database row associated with an instance of your model,
 call its ``delete`` method:
+
+.. code-block:: php
+
+    <?php
     $user = Model::factory('User')->find_one($id);
     $user->delete();
 
@@ -1021,6 +1038,10 @@ mapping column names (keys) to their values.
 The ``as_array`` method takes column names as optional arguments. If one
 or more of these arguments is supplied, only matching column names will
 be returned.
+
+.. code-block:: php
+
+    <?php
     class Person extends Model {
     }
 

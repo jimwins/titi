@@ -3,7 +3,7 @@ Filters
 
 It is often desirable to create reusable queries that can be used to
 extract particular subsets of data without repeating large sections of
-code. Titi Models allow this by providing a method called ``filter`` which
+code. Models allow this by providing a method called ``filter`` which
 can be chained in queries alongside the existing ORM query API. The
 filter method takes the name of a **public static** method on the
 current Model subclass as an argument. The supplied method will be

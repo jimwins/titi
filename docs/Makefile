@@ -77,22 +77,16 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Idiorm.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Titi.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Idiorm.qhc"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Paris.qhcp"
-	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Paris.qhc"
-
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Titi.qhc"
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/Idiorm"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Idiorm"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/Paris"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Paris"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/Titi"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Titi"
 	@echo "# devhelp"
 
 epub:

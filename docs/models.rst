@@ -162,7 +162,7 @@ To delete more than one object from the database, build a query:
 Model classes
 ~~~~~~~~~~~~~
 
-You should create a model class for each entity in your application. For
+You can also create a model class for each entity in your application. For
 example, if you are building an application that requires users, you
 should create a ``User`` class. Your model classes should extend the
 base ``Model`` class:

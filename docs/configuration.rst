@@ -10,34 +10,35 @@ you can start using the ORM straight away.
 Setup
 ~~~~~
 
-First, ``require`` the Idiorm source file:
+If you have used Composer to include Titi in your project, you can use the
+autoloader to provide access to the Titi namespace:
 
 .. code-block:: php
 
     <?php
-    require_once 'idiorm.php';
+    require_once __DIR__ . '/vendor/autoload.php';
+
+You can also use ``use`` to pull in the ORM and/or Model from the Titi
+namespace (for an easy upgrade path from Idiorm and Paris).
+
+.. code-block:: php
+
+    <?php
+    require_once __DIR__ . '/vendor/autoload.php';
+
+    use \Titi\ORM, \Titi\Model;
+
+(Further examples will assume that you have done this so we don't
+need to keep explicitly referencing the Titi namespace.)
 
 Then, pass a *Data Source Name* connection string to the ``configure``
-method of the ORM class. This is used by PDO to connect to your
+method of the ``ORM`` class. This is used by PDO to connect to your
 database. For more information, see the `PDO documentation`_.
 
 .. code-block:: php
 
     <?php
     ORM::configure('sqlite:./example.db');
-
-You may also need to pass a username and password to your database
-driver, using the ``username`` and ``password`` configuration options.
-For example, if you are using MySQL:
-
-.. code-block:: php
-
-    <?php
-    ORM::configure('mysql:host=localhost;dbname=my_database');
-    ORM::configure('username', 'database_user');
-    ORM::configure('password', 'top_secret');
-
-Also see “Configuration” section below.
 
 Configuration
 ~~~~~~~~~~~~~
@@ -60,8 +61,8 @@ once.
 
     <?php
     ORM::configure(array(
-        'setting_name_1' => 'value_for_setting_1', 
-        'setting_name_2' => 'value_for_setting_2', 
+        'setting_name_1' => 'value_for_setting_1',
+        'setting_name_2' => 'value_for_setting_2',
         'etc' => 'etc'
     ));
 
@@ -72,8 +73,11 @@ Use the ``get_config`` method to read current settings.
     <?php
     $isLoggingEnabled = ORM::get_config('logging');
     ORM::configure('logging', false);
-    // some crazy loop we don't want to log
-    ORM::configure('logging', $isLoggingEnabled);
+    try {
+      // some crazy loop we don't want to log
+    } finally {
+      ORM::configure('logging', $isLoggingEnabled);
+    }
 
 Database authentication details
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -81,9 +85,10 @@ Database authentication details
 Settings: ``username`` and ``password``
 
 Some database adapters (such as MySQL) require a username and password
-to be supplied separately to the DSN string. These settings allow you to
-provide these values. A typical MySQL connection setup might look like
-this:
+to be supplied separately to the DSN string. (Although this is no longer
+true as of PHP 7.4, where you can now specify these in the DSN for more
+adapters.) These settings allow you to provide these values. A typical MySQL
+connection setup might look like this:
 
 .. code-block:: php
 
@@ -99,8 +104,8 @@ configuration array shortcut:
 
     <?php
     ORM::configure(array(
-        'connection_string' => 'mysql:host=localhost;dbname=my_database', 
-        'username' => 'database_user', 
+        'connection_string' => 'mysql:host=localhost;dbname=my_database',
+        'username' => 'database_user',
         'password' => 'top_secret'
     ));
 
@@ -116,7 +121,6 @@ See the `find_result_set()` documentation for more information.
 
     <?php
     ORM::configure('return_result_sets', true); // returns result sets
-
 
 .. note::
 
@@ -137,7 +141,7 @@ the connection:
 .. code-block:: php
 
     <?php
-    ORM::configure('driver_options', array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+    ORM::configure('driver_options', array(PDO::MYSQL_ATTR_LOCAL_INFILE => true));
 
 PDO Error Mode
 ^^^^^^^^^^^^^^
@@ -145,7 +149,7 @@ PDO Error Mode
 Setting: ``error_mode``
 
 This can be used to set the ``PDO::ATTR_ERRMODE`` setting on the
-database connection class used by Idiorm. It should be passed one of the
+database connection class used by Titi. It should be passed one of the
 class constants defined by PDO. For example:
 
 .. code-block:: php
@@ -159,7 +163,7 @@ the error modes available, see `the PDO set attribute documentation`_.
 PDO object access
 ^^^^^^^^^^^^^^^^^
 
-Should it ever be necessary, the PDO object used by Idiorm may be
+Should it ever be necessary, the PDO object used by Titi may be
 accessed directly through ``ORM::get_db()``, or set directly via
 ``ORM::set_db()``. This should be an unusual occurance.
 
@@ -230,14 +234,14 @@ Limit clause style
 
 Setting: ``limit_clause_style``
 
-You can specify the limit clause style in the configuration. This is to facilitate
-a MS SQL style limit clause that uses the ``TOP`` syntax.
+You can specify the limit clause style in the configuration. This is to
+facilitate a MS SQL style limit clause that uses the ``TOP`` syntax.
 
 Acceptable values are ``ORM::LIMIT_STYLE_TOP_N`` and ``ORM::LIMIT_STYLE_LIMIT``.
 
 .. note::
 
-    If the PDO driver you are using is one of sqlsrv, dblib or mssql then Idiorm
+    If the PDO driver you are using is one of sqlsrv, dblib or mssql then Titi
     will automatically select the ``ORM::LIMIT_STYLE_TOP_N`` for you unless you
     override the setting.
 
@@ -246,9 +250,8 @@ Query logging
 
 Setting: ``logging``
 
-Idiorm can log all queries it executes. To enable query logging, set the
+Titi can log all queries it executes. To enable query logging, set the
 ``logging`` option to ``true`` (it is ``false`` by default).
-
 
 
 Model prefixing
@@ -312,7 +315,7 @@ Further Configuration
 
 The only other configuration options provided by Titi Models are the
 ``$_table`` and ``$_id_column`` static properties on model classes. To
-configure the database connection, you should use Idiorm’s configuration
+configure the database connection, you should use the ORM’s configuration
 system via the ``ORM::configure`` method.
 
 If you are using multiple connections, the optional `$_connection_key` static property may also be used to provide a default string key indicating which database connection in `ORM` should be used.
@@ -320,7 +323,7 @@ If you are using multiple connections, the optional `$_connection_key` static pr
 Query logging
 ~~~~~~~~~~~~~
 
-Idiorm can log all queries it executes. To enable query logging, set the
+Titi can log all queries it executes. To enable query logging, set the
 ``logging`` option to ``true`` (it is ``false`` by default).
 
 .. code-block:: php
@@ -335,14 +338,14 @@ executed.
 
 .. note::
 
-    The code that does the query log is an approximation of that provided by PDO/the
-    database (see the Idiorm source code for detail). The actual query isn't even available
-    to idiorm to log as the database/PDO handles the binding outside of idiorm's reach and
+    The code that does the query log is an approximation of that provided by
+    PDO/the database (see the ORM source code for detail). The actual query
+    isn't even available to log as the database/PDO handles the binding and
     doesn't pass it back.
 
-    This means that you might come across some inconsistencies between what is logged and
-    what is actually run. In these case you'll need to look at the query log provided by
-    your database vendor (eg. MySQL).
+    This means that you might come across some inconsistencies between what is
+    logged and what is actually run. In these case you'll need to look at the
+    query log provided by your database vendor (eg. MySQL).
 
 Query logger
 ^^^^^^^^^^^^
@@ -353,13 +356,13 @@ Setting: ``logger``
 
     You must enable ``logging`` for this setting to have any effect.
 
-It is possible to supply a ``callable`` to this configuration setting, which will
-be executed for every query that idiorm executes. In PHP a ``callable`` is anything
-that can be executed as if it were a function. Most commonly this will take the
-form of a anonymous function.
+It is possible to supply a ``callable`` to this configuration setting, which
+will be executed for every query that idiorm executes. In PHP a ``callable``
+is anything that can be executed as if it were a function. Most commonly this
+will take the form of a anonymous function.
 
-This setting is useful if you wish to log queries with an external library as it
-allows you too whatever you would like from inside the callback function.
+This setting is useful if you wish to log queries with an external library as
+it allows you too whatever you would like from inside the callback function.
 
 .. code-block:: php
 
@@ -373,7 +376,7 @@ Query caching
 
 Setting: ``caching``
 
-Idiorm can cache the queries it executes during a request. To enable
+Titi can cache the queries it executes during a request. To enable
 query caching, set the ``caching`` option to ``true`` (it is ``false``
 by default).
 
@@ -381,19 +384,19 @@ by default).
 
     <?php
     ORM::configure('caching', true);
-    
-    
+
+
 Setting: ``caching_auto_clear``
 
-Idiorm's cache is never cleared by default. If you wish to automatically clear it on save, set ``caching_auto_clear`` to ``true``
+Titi's cache is never cleared by default. If you wish to automatically clear it on save, set ``caching_auto_clear`` to ``true``
 
 .. code-block:: php
 
     <?php
     ORM::configure('caching_auto_clear', true);
 
-When query caching is enabled, Idiorm will cache the results of every
-``SELECT`` query it executes. If Idiorm encounters a query that has
+When query caching is enabled, Titi will cache the results of every
+``SELECT`` query it executes. If Titi encounters a query that has
 already been run, it will fetch the results directly from its cache and
 not perform a database query.
 
@@ -404,7 +407,7 @@ Warnings and gotchas
    duration of a single request. This is *not* a replacement for a
    persistent cache such as `Memcached`_.
 
--  Idiorm’s cache is very simple, and does not attempt to invalidate
+-  Titi’s cache is very simple, and does not attempt to invalidate
    itself when data changes. This means that if you run a query to
    retrieve some data, modify and save it, and then run the same query
    again, the results will be stale (ie, they will not reflect your
@@ -422,7 +425,7 @@ Warnings and gotchas
 Custom caching
 ''''''''''''''
 
-If you wish to use custom caching functions, you can set them from the configure options. 
+If you wish to use custom caching functions, you can set them from the configure options.
 
 .. code-block:: php
 

@@ -14,9 +14,9 @@ Contents:
    philosophy
    installation
    configuration
+   querying
    models
    associations
-   querying
    filters
    transactions
    validation
