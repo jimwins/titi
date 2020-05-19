@@ -1,6 +1,10 @@
 ChangeLog
 ---------
 
+#### 0.0.2 - release 2020-05-18
+
+* Cleaned up documentation
+
 #### 0.0.1 - release 2020-05-17
 
 The tests pass (on PHP 7.3 and 7.4, but that just means there is inadequate

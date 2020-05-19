@@ -33,7 +33,7 @@ Features
 Documentation
 -------------
 
-The documentation is not hosted anywhere yet.
+The documentation is hosted on Read the Docs: [titi.rtfd.io](https://titi.readthedocs.io/).
 
 ### Building the Docs ###
 
@@ -98,3 +98,7 @@ Tests
 Tests are written with PHPUnit and be run through composer
 
     composer test
+
+To see the test progress and results:
+
+    composer -v test
