@@ -285,8 +285,8 @@ Model prefix will cause ``Class not found`` errors.
     ``$auto_prefix_models`` property in your individual model classes. See documentation in
     the :doc:`models` section of the documentation.
 
-Model prefixing
-~~~~~~~~~~~~~~~
+Model namespaces
+~~~~~~~~~~~~~~~~
 
 Setting: ``Model::$short_table_names``
 
