@@ -220,7 +220,7 @@ class Model {
      *
      * @param  string $class_name
      *
-*@return string
+     * @return string
      */
     protected static function _get_table_name($class_name) {
         $specified_table_name = self::_get_static_property($class_name, '_table');
