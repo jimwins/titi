@@ -69,6 +69,14 @@ class MockPDOStatement extends PDOStatement {
            return array('name' => 'Fred', 'age' => 10, 'id' => ++$this->current_row);
        }
    }
+
+   public function fetchAll($fetch_style=PDO::FETCH_BOTH, $fetch_argument=null, $ctor_args=array()) {
+        $rows = array();
+        while ($row= $this->fetch($fetch_style)) {
+            $rows[] = $row;
+        }
+        return $rows;
+   }
 }
 
 /**

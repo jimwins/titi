@@ -1885,10 +1885,7 @@ class ORM implements \ArrayAccess {
         self::_execute($query, $this->_values, $this->_connection_name);
         $statement = self::get_last_statement();
 
-        $rows = array();
-        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            $rows[] = $row;
-        }
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
         if ($caching_enabled) {
             self::_cache_query_result($cache_key, $rows, $this->_table_name, $this->_connection_name);
