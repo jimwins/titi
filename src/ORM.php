@@ -2380,7 +2380,7 @@ class TitiStringException extends \Exception {}
  * @method null setResults(array $results)
  * @method array getResults()
  */
-class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serializable {
+class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serializable, \JsonSerializable {
     /**
      * The current result set as an array
      * @var array
@@ -2469,6 +2469,14 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      */
     public function offsetUnset($offset) {
         unset($this->_results[$offset]);
+    }
+
+    /**
+     * jsonSerialize
+     * @return string
+     */
+    public function jsonSerialize() {
+        return $this->_results;
     }
 
     /**

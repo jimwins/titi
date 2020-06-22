@@ -1,6 +1,12 @@
 ChangeLog
 ---------
 
+#### 0.0.3 - not released yet
+
+* Make ResultSet be JsonSerializable
+* Use PDOStatement::fetchAll() instead of doing our own loop around
+  PDOStatement::fetch()
+
 #### 0.0.2 - release 2020-05-18
 
 * Cleaned up documentation
