@@ -88,7 +88,7 @@ namespace Titi;
  * @method bool isNew()
  */
 
-class ORM implements \ArrayAccess {
+class ORM implements \ArrayAccess, \JsonSerializable {
 
     // ----------------------- //
     // --- CLASS CONSTANTS --- //
@@ -2201,6 +2201,15 @@ class ORM implements \ArrayAccess {
         unset($this->_data[$key]);
         unset($this->_dirty_fields[$key]);
     }
+
+    // --------------------- //
+    // -  JsonSerializable - //
+    // --------------------- //
+
+    public function jsonSerialize() {
+        return $this->as_array();
+    }
+
 
     // --------------------- //
     // --- MAGIC METHODS --- //

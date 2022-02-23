@@ -1,6 +1,10 @@
 ChangeLog
 ---------
 
+#### 0.0.4 - release 2022-02-23
+
+* Make ORM be JsonSerializable
+
 #### 0.0.3 - release 2020-06-22
 
 * Make ResultSet be JsonSerializable
