@@ -1,13 +1,11 @@
-<phpunit backupGlobals="true"
-         backupStaticAttributes="false"
-         bootstrap="test/bootstrap.php"
-         cacheTokens="false"
-         colors="true"
-         convertDeprecationsToExceptions="true">
-    <testsuites>
-        <testsuite name="Titi Test Suite">
-            <directory suffix="Test.php">test</directory>
-            <directory suffix="Test53.php" phpVersion="5.3.0" phpVersionOperator=">=">test</directory>
-        </testsuite>
-    </testsuites>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="true" bootstrap="test/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <coverage/>
+  <testsuites>
+    <testsuite name="Titi Test Suite">
+      <directory suffix="Test.php">test</directory>
+      <directory suffix="Test53.php" phpVersion="5.3.0" phpVersionOperator="&gt;=">test</directory>
+    </testsuite>
+  </testsuites>
+  <source/>
 </phpunit>

@@ -23,7 +23,6 @@ class ModelPrefixingTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testStaticPropertyExists() {
-        $this->assertClassHasStaticAttribute('auto_prefix_models', '\Titi\Model');
         $this->assertNull(Model::$auto_prefix_models);
     }
 
