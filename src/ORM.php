@@ -324,16 +324,14 @@ class ORM implements \ArrayAccess, \JsonSerializable {
      * This is public in case the ORM should use a ready-instantiated
      * PDO object as its database connection. Accepts an optional string key
      * to identify the connection if multiple connections are used.
-     * @param PDO $db
+     * @param \PDO $db
      * @param string $connection_name Which connection to use
      */
     public static function set_db($db, $connection_name = self::DEFAULT_CONNECTION) {
         self::_setup_db_config($connection_name);
         self::$_db[$connection_name] = $db;
-        if(!is_null(self::$_db[$connection_name])) {
-            self::_setup_identifier_quote_character($connection_name);
-            self::_setup_limit_clause_style($connection_name);
-        }
+        self::_setup_identifier_quote_character($connection_name);
+        self::_setup_limit_clause_style($connection_name);
     }
 
     /**
@@ -418,7 +416,7 @@ class ORM implements \ArrayAccess, \JsonSerializable {
      * required outside the class. If multiple connections are used,
      * accepts an optional key name for the connection.
      * @param string $connection_name Which connection to use
-     * @return PDO
+     * @return \PDO
      */
     public static function get_db($connection_name = self::DEFAULT_CONNECTION) {
         self::_setup_db($connection_name); // required in case this is called before Titi is instantiated
@@ -444,7 +442,7 @@ class ORM implements \ArrayAccess, \JsonSerializable {
     /**
      * Returns the PDOStatement instance last used by any connection wrapped by the ORM.
      * Useful for access to PDOStatement::rowCount() or error information
-     * @return PDOStatement
+     * @return \PDOStatement
      */
     public static function get_last_statement() {
         return self::$_last_statement;
@@ -892,7 +890,7 @@ class ORM implements \ArrayAccess, \JsonSerializable {
      * @example select_many('column', 'column2', 'column3');
      * @example select_many(array('column', 'column2', 'column3'), 'column4', 'column5');
      * 
-     * @return \ORM
+     * @return ORM
      */
     public function select_many() {
         $columns = func_get_args();
@@ -920,7 +918,7 @@ class ORM implements \ArrayAccess, \JsonSerializable {
      * @example select_many_expr('column', 'column2', 'column3')
      * @example select_many_expr(array('column', 'column2', 'column3'), 'column4', 'column5')
      * 
-     * @return \ORM
+     * @return ORM
      */
     public function select_many_expr() {
         $columns = func_get_args();
@@ -2000,7 +1998,6 @@ class ORM implements \ArrayAccess, \JsonSerializable {
      * Set a property on the ORM object.
      * @param string|array $key
      * @param string|null $value
-     * @param bool $raw Whether this value should be treated as raw or not
      */
     protected function _set_orm_property($key, $value = null, $expr = false) {
         if (!is_array($key)) {
@@ -2182,22 +2179,22 @@ class ORM implements \ArrayAccess, \JsonSerializable {
     // ---  ArrayAccess  --- //
     // --------------------- //
 
-    public function offsetExists($key) {
+    public function offsetExists(mixed $key): bool {
         return array_key_exists($key, $this->_data);
     }
 
-    public function offsetGet($key) {
+    public function offsetGet(mixed $key): mixed {
         return $this->get($key);
     }
 
-    public function offsetSet($key, $value) {
+    public function offsetSet(mixed $key, mixed $value): void {
         if(is_null($key)) {
             throw new \InvalidArgumentException('You must specify a key/array index.');
         }
         $this->set($key, $value);
     }
 
-    public function offsetUnset($key) {
+    public function offsetUnset(mixed $key): void {
         unset($this->_data[$key]);
         unset($this->_dirty_fields[$key]);
     }
@@ -2206,7 +2203,7 @@ class ORM implements \ArrayAccess, \JsonSerializable {
     // -  JsonSerializable - //
     // --------------------- //
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): mixed {
         return $this->as_array();
     }
 
@@ -2290,7 +2287,7 @@ class TitiString {
     /**
      * Get an easy to use instance of the class
      * @param string $subject
-     * @return \self
+     * @return self
      */
     public static function value($subject) {
         return new self($subject);
@@ -2389,7 +2386,7 @@ class TitiStringException extends \Exception {}
  * @method null setResults(array $results)
  * @method array getResults()
  */
-class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serializable, \JsonSerializable {
+class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \JsonSerializable {
     /**
      * The current result set as an array
      * @var array
@@ -2432,7 +2429,7 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      * Get the number of records in the result set
      * @return int
      */
-    public function count() {
+    public function count(): int {
         return count($this->_results);
     }
 
@@ -2441,7 +2438,7 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      * over the result set.
      * @return \ArrayIterator
      */
-    public function getIterator() {
+    public function getIterator(): \Traversable {
         return new \ArrayIterator($this->_results);
     }
 
@@ -2450,7 +2447,7 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      * @param int|string $offset
      * @return bool
      */
-    public function offsetExists($offset) {
+    public function offsetExists(mixed $offset): bool {
         return isset($this->_results[$offset]);
     }
 
@@ -2459,7 +2456,7 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      * @param int|string $offset
      * @return mixed
      */
-    public function offsetGet($offset) {
+    public function offsetGet(mixed $offset): mixed {
         return $this->_results[$offset];
     }
     
@@ -2468,7 +2465,7 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      * @param int|string $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet(mixed $offset, mixed $value): void {
         $this->_results[$offset] = $value;
     }
 
@@ -2476,33 +2473,31 @@ class ResultSet implements \Countable, \IteratorAggregate, \ArrayAccess, \Serial
      * ArrayAccess
      * @param int|string $offset
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset(mixed $offset): void {
         unset($this->_results[$offset]);
     }
 
     /**
      * jsonSerialize
-     * @return string
+     * @return mixed
      */
-    public function jsonSerialize() {
+    public function jsonSerialize(): mixed {
         return $this->_results;
     }
 
     /**
-     * Serializable
-     * @return string
+     * @return array
      */
-    public function serialize() {
-        return serialize($this->_results);
+    public function __serialize() {
+        return $this->_results;
     }
 
     /**
-     * Serializable
-     * @param string $serialized
-     * @return array
+     * @param array $data
+     * @return void
      */
-    public function unserialize($serialized) {
-        return unserialize($serialized);
+    public function __unserialize($data) {
+        $this->_results = $data;
     }
 
     /**

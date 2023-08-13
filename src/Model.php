@@ -56,6 +56,7 @@ class ORMWrapper extends ORM {
         if (method_exists($this->_class_name, $filter_function)) {
             return call_user_func_array(array($this->_class_name, $filter_function), $args);
         }
+        return $this;
     }
 
     /**
@@ -249,7 +250,7 @@ class Model {
     protected static function _use_short_table_name($class_name) {
         $global_option = self::$short_table_names;
         $class_property = self::_get_static_property($class_name, '_table_use_short_name');
-        return is_null($class_property) ? $global_option : $class_property;
+        return is_null($class_property) ? $global_option : (bool)$class_property;
     }
 
     /**
@@ -652,10 +653,8 @@ class Model {
      * @return Array
      */
     public static function __callStatic($method, $parameters) {
-        if(function_exists('get_called_class')) {
-            $model = self::factory(get_called_class());
-            return call_user_func_array(array($model, $method), $parameters);
-        }
+        $model = self::factory(get_called_class());
+        return call_user_func_array(array($model, $method), $parameters);
     }
 
     /**
