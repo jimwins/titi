@@ -1,6 +1,10 @@
 ChangeLog
 ---------
 
+#### 0.0.5 - release 2023-08-12
+
+* Add phpstan, clean things up to pass at level 5
+
 #### 0.0.4 - release 2022-02-23
 
 * Make ORM be JsonSerializable
