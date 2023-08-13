@@ -446,13 +446,13 @@ class Model {
         if (is_null($join_class_name)) {
             $base_model = explode('\\', $base_class_name);
             $base_model_name = end($base_model);
-            if (substr($base_model_name, 0, strlen(self::$auto_prefix_models)) == self::$auto_prefix_models) {
+            if (!is_null(self::$auto_prefix_models) && substr($base_model_name, 0, strlen(self::$auto_prefix_models)) == self::$auto_prefix_models) {
                 $base_model_name = substr($base_model_name, strlen(self::$auto_prefix_models), strlen($base_model_name));
             }
             // Titi wasn't checking the name settings for the associated class.
             $associated_model = explode('\\', $associated_class_name);
             $associated_model_name = end($associated_model);
-            if (substr($associated_model_name, 0, strlen(self::$auto_prefix_models)) == self::$auto_prefix_models) {
+            if (!is_null(self::$auto_prefix_models) && substr($associated_model_name, 0, strlen(self::$auto_prefix_models)) == self::$auto_prefix_models) {
                 $associated_model_name = substr($associated_model_name, strlen(self::$auto_prefix_models), strlen($associated_model_name));
             }
             $class_names = array($base_model_name, $associated_model_name);
