@@ -1,13 +1,11 @@
 language: php
 php:
   - 8.1
-env:
-  - PHPV=0
-  - XDEBUG_MODE=coverage
+env: PHPV=0
 install: |
   composer install
 script: |
-  composer run-script test -- --colors --coverage-text
+  composer run-script test -- --colors
 cache:
   directories:
     - $HOME/.composer/cache
