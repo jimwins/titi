@@ -1,7 +1,7 @@
 Titi
 ====
 
-[![Build Status](https://travis-ci.org/jimwins/titi.png?branch=master)](https://travis-ci.org/jimws/titi)
+[![Build Status](https://app.travis-ci.com/jimwins/titi.svg?branch=main)](https://app.travis-ci.com/github/jimwins/titi)
 
 Titi is a lightweight nearly-zero-configuration object-relational mapper and
 fluent query builder for PHP, plus a lightweight ActiveRecord implementation.
