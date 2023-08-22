@@ -6,7 +6,7 @@ Titi
 Titi is a lightweight nearly-zero-configuration object-relational mapper and
 fluent query builder for PHP, plus a lightweight ActiveRecord implementation.
 
-Titi was forked from [Idiorm and Paris](http://j4mie.github.com/idiormandparis/)
+Titi was forked from [Idiorm and Paris](http://j4mie.github.io/idiormandparis/)
 (combined into a single repo).
 
 ---
