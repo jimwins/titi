@@ -13,7 +13,7 @@ use Titi\Model;
 class MockPDOStatement extends PDOStatement {
    private $current_row = 0;
    private $statement = NULL;
-   private $bindParams = array();
+   private $bindParams = [];
    
    /**
     * Store the statement that gets passed to the constructor
@@ -27,7 +27,7 @@ class MockPDOStatement extends PDOStatement {
     */
    public function execute($params = NULL) : bool {
        $count = 0;
-       $m = array();
+       $m = [];
        if (is_null($params)) $params = $this->bindParams;
        if (preg_match_all('/"[^"\\\\]*(?:\\?)[^"\\\\]*"|\'[^\'\\\\]*(?:\\?)[^\'\\\\]*\'|(\\?)/', $this->statement, $m, PREG_SET_ORDER)) {
            $count = count($m);
@@ -70,12 +70,12 @@ class MockPDOStatement extends PDOStatement {
        if ($this->current_row == 5) {
            return false;
        } else {
-           return array('name' => 'Fred', 'age' => 10, 'id' => ++$this->current_row);
+           return [ 'name' => 'Fred', 'age' => 10, 'id' => ++$this->current_row ];
        }
    }
 
    public function fetchAll($fetch_style=PDO::FETCH_BOTH, mixed ...$args) : array {
-        $rows = array();
+        $rows = [];
         while ($row= $this->fetch($fetch_style)) {
             $rows[] = $row;
         }
@@ -93,7 +93,8 @@ class MockPDO extends PDO {
    /**
     * Return a dummy PDO statement
     */
-   public function prepare($statement, $driver_options=array()) : PDOStatement|false {
+   private $last_query;
+   public function prepare($statement, $driver_options=[]) : PDOStatement|false {
        $this->last_query = new MockPDOStatement($statement);
        return $this->last_query;
    }
@@ -113,7 +114,8 @@ class MockDifferentPDO extends MockPDO {
     /**
      * Return a dummy PDO statement
      */
-    public function prepare($statement, $driver_options = array()) : PDOStatement|false {
+    private $last_query;
+    public function prepare($statement, $driver_options = []) : PDOStatement|false {
         $this->last_query = new MockDifferentPDOStatement($statement);
         return $this->last_query;
     }

@@ -510,7 +510,8 @@ class ORM implements \ArrayAccess, \JsonSerializable {
             $bound_query = $query;
         } else {
             // Escape the parameters
-            $parameters = array_map(array(self::get_db($connection_name), 'quote'), $parameters);
+            $pdo = self::get_db($connection_name);
+            $parameters = array_map(fn($x) => is_null($x) ? $x : $pdo->quote($x), $parameters);
 
             if (array_values($parameters) === $parameters) {
                 // ? placeholders
