@@ -402,7 +402,7 @@ class Model {
      * @param  null|string $foreign_key_name
      * @param  null|string $foreign_key_name_in_associated_models_table
      * @param  null|string $connection_name
-     * @return $this|null
+     * @return ORMWrapper|null
      */
     protected function belongs_to($associated_class_name, $foreign_key_name=null, $foreign_key_name_in_associated_models_table=null, $connection_name=null) {
         $associated_table_name = self::_get_table_name(self::$auto_prefix_models . $associated_class_name);
