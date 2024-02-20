@@ -1,6 +1,14 @@
 ChangeLog
 ---------
 
+#### 0.0.7 - release 2024-02-20
+
+* Tweak some function signatures for working with phpstan
+
+#### 0.0.6 - release 2023-09-28
+
+* Initial 8.2 support, silences deprecation warning
+
 #### 0.0.5 - release 2023-08-12
 
 * Add phpstan, clean things up to pass at level 5
